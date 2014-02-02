@@ -35,6 +35,8 @@ private:
     void loadTools();
     void displayData(Data* data);
     void analyse();
+    void setCurrentView(QString viewtitle);
+    void setCurrentView(View* view);
 
 private slots:
     void view_selected(QString viewtitle);

@@ -14,6 +14,7 @@ public:
     virtual Data *simulate(Data* data);
     virtual QString preferedView();
     virtual void predefineDataParametres(Data* data);
+    virtual int progress();
 signals:
 
 public slots:

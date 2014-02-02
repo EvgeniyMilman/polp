@@ -132,15 +132,22 @@ void MainWindow::analyse(){
     }
     displayData(currentData);
 }
+void MainWindow::setCurrentView(QString viewtitle){
+    setCurrentView(PluginManager::instance()->findView(viewtitle));
+}
 
+void MainWindow::setCurrentView(View *view){
+    currentView = view;
+    ui->viewstackedWidget->setCurrentWidget(currentView->viewPane());
+}
 void MainWindow::view_selected(QString viewtitle){
-    currentView = PluginManager::instance()->findView(viewtitle);
+    setCurrentView(viewtitle);
     Q_FOREACH(const QModelIndex &index, ui->projectView->selectionModel()->selectedIndexes()){
         ProjectItem* item = (ProjectItem*)(ui->projectView->model()->data(index,Qt::UserRole).value<void*>());
         item->view = currentView;
     }
     displayData(currentData);
-    ui->viewstackedWidget->setCurrentWidget(currentView->viewPane());
+
 }
 
 void MainWindow::simulation_add(QString simulationtitle){
@@ -176,6 +183,7 @@ void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
         ProjectItem* item = (ProjectItem*)(ui->projectView->model()->data(indexlist[0],Qt::UserRole).value<void*>());
         QWidget* control = item->control();
         item->itemSelected();
+        setCurrentView(item->view);
         if(control!=NULL){
             ui->controlstackedWidget->show();
             ui->controlstackedWidget->setCurrentWidget(control);

@@ -7,4 +7,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     SMDFileFormat \
-    SMDFileFormatTest
+    SMDFileFormatTest \
+    GPIBGeneralDevice

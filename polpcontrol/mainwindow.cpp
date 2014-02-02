@@ -5,6 +5,7 @@
 #include "pluginmanager.h"
 #include "projectmanager.h"
 #include "devicedialog.h"
+#include "simulationcontrolpane.h"
 
 #include <QProgressBar>
 #include <QSignalMapper>
@@ -30,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->analesersplitter->setStretchFactor(1, 0);
     ui->toolsplitter->setStretchFactor(0, 1);
     ui->toolsplitter->setStretchFactor(1, 0);
+    ui->controlstackedWidget->hide();
     loadViews();
     loadAnalysers();
     loadSimulations();
@@ -91,7 +93,9 @@ void MainWindow::loadDevices(){
         ui->menuDevice->addAction(action);
         connect(action, SIGNAL(triggered()), mapper, SLOT(map()));
         mapper->setMapping(action,dev->deviceClass());
+        ui->controlstackedWidget->addWidget(dev->controlPane());
     }
+    ui->controlstackedWidget->addWidget(SimulationControlPane::instance());
     connect(mapper, SIGNAL(mapped(QString)), this, SLOT(device_add(QString)));
 }
 
@@ -167,6 +171,18 @@ void MainWindow::device_add(QString devicetitle){
 
 void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
     //SET Contron pane here:
+    QModelIndexList indexlist = ui->projectView->selectionModel()->selectedIndexes();
+    if(!indexlist.empty()){
+        ProjectItem* item = (ProjectItem*)(ui->projectView->model()->data(indexlist[0],Qt::UserRole).value<void*>());
+        QWidget* control = item->control();
+        item->itemSelected();
+        if(control!=NULL){
+            ui->controlstackedWidget->show();
+            ui->controlstackedWidget->setCurrentWidget(control);
+        }else{
+            ui->controlstackedWidget->hide();
+        }
+    }
     analyse();
     //SET prefered view
 }

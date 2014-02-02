@@ -1,6 +1,7 @@
 #include "project.h"
 #include "pluginmanager.h"
 #include "projectmanager.h"
+#include "simulationcontrolpane.h"
 
 Project::Project(QObject *parent) :
     QObject(parent)
@@ -60,7 +61,6 @@ ProjectItem::~ProjectItem(){
 }
 
 void ProjectItem::itemSelected(){
-
 }
 
 QWidget *ProjectItem::control()
@@ -74,11 +74,12 @@ SimulationProjectItem::SimulationProjectItem(QObject *parent):ProjectItem(parent
 }
 
 void SimulationProjectItem::itemSelected(){
-    //TODO::
 }
 
-QWidget *SimulationProjectItem::control() {//TODO::
-    return NULL;
+QWidget *SimulationProjectItem::control() {
+    SimulationControlPane::instance()->setSimulation(this->simulation);
+    SimulationControlPane::instance()->setData(this->data);
+    return SimulationControlPane::instance();
 }
 
 
@@ -99,7 +100,6 @@ QWidget *DeviceProjectItem::control(){
 
 
 ProjectModel::ProjectModel(QObject *parent):QAbstractListModel(parent){
-
     connect(ProjectManager::instance(),SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
 }
 

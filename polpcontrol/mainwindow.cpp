@@ -13,6 +13,7 @@
 #include<QDialog>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow){
     currentData = NULL;
@@ -20,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->projectView->setModel(new ProjectModel(ui->projectView));
     connect(ui->projectView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          this, SLOT(handleSelectionChanged(QItemSelection)));
+          this, SLOT(onProjectItemSelectionChanged(QItemSelection)));
     ui->leftsplitter->setStretchFactor(0, 0);
     ui->leftsplitter->setStretchFactor(1, 1);
     ui->viewsplitter->setStretchFactor(0, 1);
@@ -59,7 +60,6 @@ void MainWindow::loadViews(){
 }
 
 void MainWindow::loadAnalysers(){
-    //TODO:://loadAnalysers
     analyserBox = new QComboBox(ui->mainToolBar);
     QList<Analyser*> analysers = PluginManager::instance()->analysers().values();
     Q_FOREACH(Analyser* analyser, analysers){
@@ -158,9 +158,10 @@ void MainWindow::device_add(QString devicetitle){
     }
 }
 
-void MainWindow::handleSelectionChanged(QItemSelection item){
+void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
     //SET Contron pane here:
     analyse();
+    //SET prefered view
 }
 
 void MainWindow::onAnalyserBoxIndexChanged(int i){
@@ -176,4 +177,31 @@ void MainWindow::onAnalyserBoxIndexChanged(int i){
 
 void MainWindow::on_actionNew_triggered(){
     ProjectManager::instance()->newProject();
+}
+
+void MainWindow::on_actionFileNew_triggered(){
+    QMessageBox::information(this,"TODO::","Not implemented");
+}
+
+void MainWindow::on_actionFileOpen_triggered(){
+    QString  sel_filter;
+    QStringList files = QFileDialog::getOpenFileNames(this, "Open files", QString(), PluginManager::instance()->fileFilters(),&sel_filter);
+    FileFormat* fileformat = PluginManager::instance()->fileFormat(sel_filter);
+    if(fileformat!=NULL && !files.empty()){
+        Q_FOREACH(QString file, files){
+            Data2D* data = new Data2D(ProjectManager::instance()->currentProject());
+            data->setParameter("title",QFile(file).fileName());
+            data->setParameter("filename",file);
+            bool ok = (fileformat->loadData(data))?false:true;
+            if(ok){
+                ProjectManager::instance()->currentProject()->addItem(data,fileformat->preferedView());
+            }else{
+                QMessageBox::information(this,"Open file",fileformat->error());
+            }
+        }
+    }
+}
+
+void MainWindow::on_actionFileSave_triggered(){
+    QMessageBox::information(this,"TODO::","Not implemented");
 }

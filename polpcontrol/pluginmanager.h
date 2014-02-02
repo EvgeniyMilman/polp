@@ -22,9 +22,12 @@ public:
     View *findView(QString key);
     Simulation * findSimulation(QString title);
     Device *findDevice(QString title);
+    FileFormat* fileFormat(QString filter);
+    QString fileFilters();
 
 private:
     void loadPlugin(QObject* plugin);
+    QString fileFilter(FileFormat* f);
 
     QMap<QString, View*> _views;
     QMap<QString, Analyser*> _analysers;

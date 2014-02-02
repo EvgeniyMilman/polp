@@ -40,8 +40,11 @@ private slots:
     void view_selected(QString viewtitle);
     void simulation_add(QString simulationtitle);
     void device_add(QString devicetitle);
-    void handleSelectionChanged(QItemSelection item);
+    void onProjectItemSelectionChanged(QItemSelection item);
     void onAnalyserBoxIndexChanged(int index);
+    void on_actionFileNew_triggered();
+    void on_actionFileOpen_triggered();
+    void on_actionFileSave_triggered();
 };
 
 #endif // MAINWINDOW_H

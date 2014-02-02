@@ -22,14 +22,16 @@ HEADERS += \
     simpleanalyser.h \
     simpleview.h \
     simplesim.h \
-    simpledevice.h
+    simpledevice.h \
+    simplefileformat.h
 
 SOURCES += \
     data.cpp \
     simpleanalyser.cpp \
     simpleview.cpp \
     simplesim.cpp \
-    simpledevice.cpp
+    simpledevice.cpp \
+    simplefileformat.cpp
 
 FORMS += \
     simpleviewform.ui

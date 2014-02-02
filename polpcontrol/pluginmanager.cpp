@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <simplesim.h>
 #include <simpledevice.h>
+#include <simplefileformat.h>
 #include "simpleview.h"
 #include "simpleanalyser.h"
 
@@ -24,6 +25,7 @@ void PluginManager::loadPlugins(){
     loadPlugin(new SimpleAnalyser);
     loadPlugin(new SimpleSim);
     loadPlugin(new SimpleDevice);
+    loadPlugin(new SimpleFileFormat);
     QDir pluginsDir = QDir(qApp->applicationDirPath());
         qDebug("%s", pluginsDir.absolutePath().toLocal8Bit().data());
     #if defined(Q_OS_WIN)
@@ -105,6 +107,28 @@ Q_FOREACH(Device * dev, _devices){
 }
 qDebug("ERROR:: PluginManager :: Device not found");
 return NULL;
+}
+
+FileFormat *PluginManager::fileFormat(QString filter){
+    Q_FOREACH(FileFormat* format, _fileFormats){
+        if(filter==fileFilter(format))
+            return format;
+    }
+    return NULL;
+}
+
+QString PluginManager::fileFilter(FileFormat *f){
+    QString list;
+    list = f->description()+" ("+ f->extension()+")";
+    return list;
+}
+
+QString PluginManager::fileFilters(){
+    QStringList list;
+    Q_FOREACH(FileFormat* format, _fileFormats){
+        list << fileFilter(format)<<";;" ;
+    }
+    return list.join("");
 }
 
 void PluginManager::loadPlugin(QObject *plugin){

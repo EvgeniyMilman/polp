@@ -17,7 +17,7 @@ QWidget *SimpleDevice::controlPane()
 }
 
 int SimpleDevice::loadData(Data *data)
-{
+{    
     return 0;
 }
 

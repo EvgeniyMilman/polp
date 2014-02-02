@@ -63,6 +63,7 @@ public:
     virtual Data * simulate(Data* data)=0;
     virtual QString preferedView()=0;
     virtual void predefineDataParametres(Data* data)=0;
+    virtual int progress()=0;
 };
 
 class Tool{

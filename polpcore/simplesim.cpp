@@ -19,6 +19,11 @@ void SimpleSim::predefineDataParametres(Data *data){
     }
 }
 
+int SimpleSim::progress()
+{
+    return 100;
+}
+
 Data *SimpleSim::simulate(Data *data){
 
     return data;

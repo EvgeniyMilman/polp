@@ -31,21 +31,27 @@ int SMDFileFormat::loadData(Data *data){
     }
 
     QFile file(filename);
+    if(!file.open(QIODevice::ReadOnly)){
+        error_message = "Can not open file"+ filename;
+        return -1;
+    }
     QTextStream inputDataStream(&file);
 
     QMap<QString, QVariant> headerParams = parseSMDHeader(inputDataStream);
     if (hasError()) {
+        file.close();
         return -1;
     }
 
     QMap<QString, QVector<double> > dataPoints = parseSMDDataStream(inputDataStream);
     if (hasError()) {
+        file.close();
         return -1;
     }
 
     int length = headerParams["point"].toInt();
-    int dwell = headerParams["dwell"].toDouble();
-    QVector<double> time = makeTimeVector(dwell, length);
+    double dwell = headerParams["dw"].toDouble();
+    QVector<double> time = makeTimeVector(length,dwell);
 
     // Populate output data object
 
@@ -62,7 +68,7 @@ int SMDFileFormat::loadData(Data *data){
         data2d->setParameter(it.key(), it.value());
     }
     data2d->stopEdit();
-
+    file.close();
     return 0;
 }
 
@@ -188,7 +194,7 @@ int SMDFileFormat::validateFilename(QString filename)
     }
 
     QFile file(filename);
-    if (!file.exists() || !file.isReadable()) {
+    if (!file.exists()) {
         this->error_message = "Cannot open provided input file: " + filename;
         return -1;
     }

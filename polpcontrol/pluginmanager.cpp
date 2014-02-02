@@ -55,6 +55,7 @@ void PluginManager::loadPlugins(){
                            loadPlugin(plugin);
                        }
                 }else{
+                    qDebug(loader.errorString().toLocal8Bit().data());
                     qDebug("Failed to load %s",fileName.toLocal8Bit().data());
                 }
         }

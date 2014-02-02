@@ -25,7 +25,6 @@ void PluginManager::loadPlugins(){
     loadPlugin(new SimpleAnalyser);
     loadPlugin(new SimpleSim);
     loadPlugin(new SimpleDevice);
-    loadPlugin(new SimpleFileFormat);
     QDir pluginsDir = QDir(qApp->applicationDirPath());
         qDebug("%s", pluginsDir.absolutePath().toLocal8Bit().data());
     #if defined(Q_OS_WIN)
@@ -127,8 +126,9 @@ QString PluginManager::fileFilter(FileFormat *f){
 QString PluginManager::fileFilters(){
     QStringList list;
     Q_FOREACH(FileFormat* format, _fileFormats){
-        list << fileFilter(format)<<";;" ;
+        list << fileFilter(format)<<";;";
     }
+    list.removeLast();
     return list.join("");
 }
 

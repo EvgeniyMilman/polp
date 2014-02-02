@@ -36,6 +36,7 @@ public:
     QList<QString> curvers();
     virtual void startEdit();
     virtual void stopEdit();
+    void addCurve(QString curve,QVector<double> *x,QVector<double> *y );
 private:
     QMap<QString,QVector<double>*> xdata;
     QMap<QString,QVector<double>*> ydata;

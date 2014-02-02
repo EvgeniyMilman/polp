@@ -19,7 +19,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionOpen_triggered();
     void on_actionNew_triggered();
 
 private:
@@ -33,6 +32,7 @@ private:
     void loadAnalysers();
     void loadSimulations();
     void loadDevices();
+    void loadTools();
     void displayData(Data* data);
     void analyse();
 

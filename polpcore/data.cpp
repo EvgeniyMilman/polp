@@ -62,6 +62,11 @@ void Data2D::stopEdit(){
     emit dataChanged();
 }
 
+void Data2D::addCurve(QString curve, QVector<double> *x, QVector<double> *y){
+    xdata.insert(curve, new QVector<double>(*x));
+    ydata.insert(curve, new QVector<double>(*y));
+}
+
 
 DataBin::DataBin(QObject *parent):Data(parent){
     _size =0;

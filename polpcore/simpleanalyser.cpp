@@ -19,5 +19,16 @@ Data *SimpleAnalyser::analyse(Data *data){
 Data *SimpleAnalyser::analyse(QList<Data *> dataset){
     if(dataset.isEmpty())
         return data;
-    return dataset.at(0);
+    data->startEdit();
+    Q_FOREACH(Data* tmp,dataset){
+        if(qobject_cast<Data2D*>(tmp)){
+            Data2D* data2d = (Data2D*)tmp;
+            Q_FOREACH(QString curve,data2d->curvers()){
+                QString newcurve = data2d->parameter("title").toString()+curve;
+                data->addCurve(newcurve,data2d->x(curve),data2d->y(curve));
+            }
+        }
+    }
+    data->stopEdit();
+    return data;
 }

@@ -34,16 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     loadAnalysers();
     loadSimulations();
     loadDevices();
+    loadTools();
 }
 
 MainWindow::~MainWindow(){
     delete ui;
 }
-
-void MainWindow::on_actionOpen_triggered(){
-}
-
-
 
 void MainWindow::loadViews(){
     QSignalMapper* mapper = new QSignalMapper(this);
@@ -99,11 +95,20 @@ void MainWindow::loadDevices(){
     connect(mapper, SIGNAL(mapped(QString)), this, SLOT(device_add(QString)));
 }
 
+void MainWindow::loadTools(){
+    //TODO:: load tools
+    ui->toolswidget->hide();
+}
+
 void MainWindow::displayData(Data *data){
     if(data!=NULL){
         if(currentView->setData(data)){
             QMessageBox::information(this,"Error",currentView->error());
         }
+    }else{
+        Data2D* tmp = new Data2D;
+        currentView->setData(tmp);
+        delete tmp;
     }
 }
 
@@ -118,6 +123,8 @@ void MainWindow::analyse(){
        currentData = currentAnalyser->analyse(datalist.at(0));
     }else if (datalist.size()>1){
        currentData = currentAnalyser->analyse(datalist);
+    }else if(datalist.size()==0){
+        currentData=NULL;
     }
     displayData(currentData);
 }
@@ -177,6 +184,7 @@ void MainWindow::onAnalyserBoxIndexChanged(int i){
 
 void MainWindow::on_actionNew_triggered(){
     ProjectManager::instance()->newProject();
+    displayData(NULL);
 }
 
 void MainWindow::on_actionFileNew_triggered(){
@@ -190,7 +198,7 @@ void MainWindow::on_actionFileOpen_triggered(){
     if(fileformat!=NULL && !files.empty()){
         Q_FOREACH(QString file, files){
             Data2D* data = new Data2D(ProjectManager::instance()->currentProject());
-            data->setParameter("title",QFile(file).fileName());
+            data->setParameter("title",QFileInfo(file).fileName());
             data->setParameter("filename",file);
             bool ok = (fileformat->loadData(data))?false:true;
             if(ok){

@@ -5,6 +5,8 @@
 
 #include "plugins.h"
 
+#include <QTextStream>
+
 class SMDFILEFORMATSHARED_EXPORT SMDFileFormat: public QObject , public FileFormat{
     Q_OBJECT
     Q_INTERFACES(FileFormat)
@@ -17,6 +19,15 @@ public:
     virtual int saveData(Data* data);
     virtual QString error();
     virtual QString preferedView();
+protected:
+    QTextStream getInputDataStream(QString filename);
+
+    QMap<QString, QVariant> parseSMDHeader(QTextStream&);
+    QMap<QString, QVector<double> > parseSMDDataStream(QTextStream&);
+    QVector<double> makeTimeVector(int length, double dwell);
+
+    int validateFilename(QString filename);
+    bool hasError();
 private:
     QString error_message;
 };

@@ -5,7 +5,7 @@ GPIBBus::GPIBBus()
 {
 }
 
- GPIBBus* GPIBBus::innstance()
+ GPIBBus* GPIBBus::instance()
 {
      if(bus==NULL){
          bus = new GPIBBus;

@@ -4,7 +4,7 @@
 class GPIBBus{
         GPIBBus();
 public:
-    static GPIBBus* innstance();
+    static GPIBBus* instance();
 
 };
 

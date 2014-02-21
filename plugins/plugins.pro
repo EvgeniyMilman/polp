@@ -7,5 +7,6 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     SMDFileFormat \
-    SMDFileFormatTest \
-    GPIBGeneralDevice
+    GPIBGeneralDevice \
+    NMRAnalyser \
+    TripletDNP

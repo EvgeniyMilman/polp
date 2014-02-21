@@ -23,20 +23,24 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(ui->projectView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(onProjectItemSelectionChanged(QItemSelection)));
-    ui->leftsplitter->setStretchFactor(0, 0);
-    ui->leftsplitter->setStretchFactor(1, 1);
-    ui->viewsplitter->setStretchFactor(0, 1);
-    ui->viewsplitter->setStretchFactor(1, 0);
-    ui->analesersplitter->setStretchFactor(0, 1);
-    ui->analesersplitter->setStretchFactor(1, 0);
-    ui->toolsplitter->setStretchFactor(0, 1);
-    ui->toolsplitter->setStretchFactor(1, 0);
+        ui->leftsplitter->setStretchFactor(0, 0);
+        ui->leftsplitter->setStretchFactor(1, 1);
+        ui->viewsplitter->setStretchFactor(0, 1);
+        ui->viewsplitter->setStretchFactor(1, 0);
+        ui->analesersplitter->setStretchFactor(0, 1);
+        ui->analesersplitter->setStretchFactor(1, 0);
+        ui->toolsplitter->setStretchFactor(0, 1);
+        ui->toolsplitter->setStretchFactor(1, 0);
     ui->controlstackedWidget->hide();
     loadViews();
     loadAnalysers();
     loadSimulations();
     loadDevices();
     loadTools();
+    ui->menuTools->addSeparator();
+    QAction* settings = ui->menuTools->addAction("Settings");
+    connect(settings, SIGNAL(triggered()),this, SLOT(showSettings()));
+
 }
 
 MainWindow::~MainWindow(){
@@ -100,8 +104,16 @@ void MainWindow::loadDevices(){
 }
 
 void MainWindow::loadTools(){
-    //TODO:: load tools
-    ui->toolswidget->hide();
+    QSignalMapper* mapper = new QSignalMapper(this);
+    QList<Tool*> tools = PluginManager::instance()->tools().values();
+    Q_FOREACH(Tool* tool,tools){
+        QAction* action = new QAction(tool->title(),this);
+        ui->menuTools->addAction(action);
+        connect(action, SIGNAL(triggered()), mapper, SLOT(map()));
+        mapper->setMapping(action,(QObject*)tool);
+    }
+    connect(mapper, SIGNAL(mapped(QObject*)), this, SLOT(tool_selected(QObject*)));
+    ui->toolsWidget->hide();
 }
 
 void MainWindow::displayData(Data *data){
@@ -177,7 +189,6 @@ void MainWindow::device_add(QString devicetitle){
 }
 
 void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
-    //SET Contron pane here:
     QModelIndexList indexlist = ui->projectView->selectionModel()->selectedIndexes();
     if(!indexlist.empty()){
         ProjectItem* item = (ProjectItem*)(ui->projectView->model()->data(indexlist[0],Qt::UserRole).value<void*>());
@@ -204,6 +215,16 @@ void MainWindow::onAnalyserBoxIndexChanged(int i){
         ui->analyserstackedWidget->setCurrentWidget(currentAnalyser->controlPane());
     }
     analyse();
+}
+
+void MainWindow::tool_selected(QObject *obj){
+    Tool* tool = (Tool*)obj;
+    ui->toolsWidget->addTab(tool->toolPane(),tool->title());
+    ui->toolsWidget->show();
+}
+
+void MainWindow::showSettings(){
+    QMessageBox::information(this,"TODO::","Not implemented");
 }
 
 void MainWindow::on_actionNew_triggered(){
@@ -236,4 +257,10 @@ void MainWindow::on_actionFileOpen_triggered(){
 
 void MainWindow::on_actionFileSave_triggered(){
     QMessageBox::information(this,"TODO::","Not implemented");
+}
+
+void MainWindow::on_toolsWidget_tabCloseRequested(int index){
+    ui->toolsWidget->removeTab(index);
+    if(ui->toolsWidget->count()==0)
+        ui->toolsWidget->hide();
 }

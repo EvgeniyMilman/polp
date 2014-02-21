@@ -21,16 +21,25 @@ HEADERS += \
     plugins.h \
     simpleanalyser.h \
     simpleview.h \
-    simpledevice.h
+    simpledevice.h\
+    pluginmanager.h \
+    project.h \
+    projectmanager.h \
+    simulationcontrolpane.h
 
 SOURCES += \
     data.cpp \
     simpleanalyser.cpp \
     simpleview.cpp \
-    simpledevice.cpp
+    simpledevice.cpp\
+    pluginmanager.cpp \
+    project.cpp \
+    projectmanager.cpp \
+    simulationcontrolpane.cpp
 
 FORMS += \
-    simpleviewform.ui
+    simpleviewform.ui \
+    simulationcontrolpane.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../qcustomplot/release/ -lqcustomplotd1
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../qcustomplot/debug/ -lqcustomplotd1

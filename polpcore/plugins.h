@@ -70,9 +70,13 @@ class Tool{
 public:
     virtual QString title()=0;
     virtual QWidget* toolPane()=0;
-    virtual bool isDialog()=0;
-    //Default value is false
-    virtual bool isHidden()=0;
+};
+
+class Settings{
+public:
+    virtual QString title()=0;
+    virtual QWidget* settingsPane()=0;
+    virtual void saveSettings()=0;
 };
 
 class PluginCollection {
@@ -86,6 +90,7 @@ Q_DECLARE_INTERFACE(Device,"jp.riken.ribf.polp.Device/1.0")
 Q_DECLARE_INTERFACE(FileFormat,"jp.riken.ribf.polp.FileFormat/1.0")
 Q_DECLARE_INTERFACE(Simulation,"jp.riken.ribf.polp.Simulation/1.0")
 Q_DECLARE_INTERFACE(Tool,"jp.riken.ribf.polp.Tool/1.0")
+Q_DECLARE_INTERFACE(Settings,"jp.riken.ribf.polp.Settings/1.0")
 Q_DECLARE_INTERFACE(PluginCollection,"jp.riken.ribf.polp.PluginCollection/1.0")
 
 

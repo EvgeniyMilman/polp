@@ -1,6 +1,7 @@
 #include "gpibbus.h"
+#include <qglobal.h>
 
-static  GPIBBus* bus=NULL;
+static  GPIBBus* bus= NULL;
 GPIBBus::GPIBBus()
 {
 }

@@ -2,7 +2,6 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QApplication>
-#include "simplesim.h"
 #include "simpledevice.h"
 #include "simpleview.h"
 #include "simpleanalyser.h"
@@ -22,7 +21,6 @@ PluginManager* PluginManager::instance(){
 void PluginManager::loadPlugins(){
     loadPlugin(new SimpleView);
     loadPlugin(new SimpleAnalyser);
-    loadPlugin(new SimpleSim);
     loadPlugin(new SimpleDevice);
     QDir pluginsDir = QDir(qApp->applicationDirPath());
         qDebug("%s", pluginsDir.absolutePath().toLocal8Bit().data());

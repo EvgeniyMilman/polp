@@ -31,6 +31,7 @@ QString DeviceDialog::getDeviceID(Device *dev , QWidget* parent, bool*ok, QStrin
     if(model.stringList().empty()){
         dialog->ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     }else{
+        dialog->ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
         dialog->ui->listView->selectionModel()->select(model.index(0,0),QItemSelectionModel::Select);
     }
     dialog->exec();

@@ -21,14 +21,12 @@ HEADERS += \
     plugins.h \
     simpleanalyser.h \
     simpleview.h \
-    simplesim.h \
     simpledevice.h
 
 SOURCES += \
     data.cpp \
     simpleanalyser.cpp \
     simpleview.cpp \
-    simplesim.cpp \
     simpledevice.cpp
 
 FORMS += \

@@ -218,6 +218,7 @@ void MainWindow::onAnalyserBoxIndexChanged(int i){
 void MainWindow::tool_selected(QObject *obj){
     Tool* tool = (Tool*)obj;
     ui->toolsWidget->addTab(tool->toolPane(),tool->title());
+    ui->toolsWidget->setCurrentWidget(tool->toolPane());
     ui->toolsWidget->show();
 }
 

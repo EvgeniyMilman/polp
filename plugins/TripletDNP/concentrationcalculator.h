@@ -4,6 +4,10 @@
 #include <QWidget>
 #include <plugins.h>
 
+namespace Ui {
+class ConcentrationCalculatorForm;
+}
+
 class ConcentrationCalculator : public QWidget, public Tool
 {
     Q_OBJECT
@@ -16,6 +20,8 @@ signals:
 
 public slots:
 
+private:
+    Ui::ConcentrationCalculatorForm * ui;
 };
 
 #endif // CONCENTRATIONCALCULATOR_H

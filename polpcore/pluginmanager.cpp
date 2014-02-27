@@ -125,7 +125,8 @@ QString PluginManager::fileFilters(){
     Q_FOREACH(FileFormat* format, _fileFormats){
         list << fileFilter(format)<<";;";
     }
-    list.removeLast();
+    if(!list.isEmpty())
+        list.removeLast();
     return list.join("");
 }
 

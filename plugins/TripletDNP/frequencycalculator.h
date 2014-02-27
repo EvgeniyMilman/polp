@@ -4,6 +4,11 @@
 #include <QWidget>
 #include <plugins.h>
 
+namespace Ui {
+class FrequencyCalculatorForm;
+
+}
+
 class FrequencyCalculator : public QWidget, public Tool
 {
     Q_OBJECT
@@ -15,7 +20,8 @@ public:
 signals:
 
 public slots:
-
+private:
+    Ui::FrequencyCalculatorForm * ui;
 };
 
 #endif // FREQUENCYCALCULATOR_H

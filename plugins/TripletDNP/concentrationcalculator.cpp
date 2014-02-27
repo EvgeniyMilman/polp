@@ -1,8 +1,9 @@
 #include "concentrationcalculator.h"
 
-ConcentrationCalculator::ConcentrationCalculator(QWidget *parent) :
-    QWidget(parent)
-{
+#include "ui_ConcentrationCalculator.h"
+
+ConcentrationCalculator::ConcentrationCalculator(QWidget *parent) :QWidget(parent){
+    ui->setupUi(this);
 }
 
 QString ConcentrationCalculator::title(){

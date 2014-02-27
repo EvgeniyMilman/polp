@@ -7,7 +7,13 @@
 #include <QVariant>
 #include <QList>
 #include <QVector>
-
+/**
+ * @brief The Data class
+ * Parametres:
+ *          title
+ *          filename
+ *          deviceID
+ */
 class Data : public QObject{
     Q_OBJECT
 public:

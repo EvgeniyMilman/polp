@@ -42,3 +42,7 @@ macx{
         thisplugun.commands = cp $$OUT_PWD/$$thisplugun.target   $$OUT_PWD/../../polpcontrol/plugins/;
         QMAKE_POST_LINK+= $$thisplugun.commands
 }
+
+FORMS += \
+    ConcentrationCalculator.ui \
+    FrequencyCalculator.ui

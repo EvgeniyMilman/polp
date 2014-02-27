@@ -40,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->menuTools->addSeparator();
     QAction* settings = ui->menuTools->addAction("Settings");
     connect(settings, SIGNAL(triggered()),this, SLOT(showSettings()));
-
 }
 
 MainWindow::~MainWindow(){
@@ -203,7 +202,6 @@ void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
         }
     }
     analyse();
-    //SET prefered view
 }
 
 void MainWindow::onAnalyserBoxIndexChanged(int i){

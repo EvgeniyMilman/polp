@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/dnp">
+        <file>pentacene.png</file>
+    </qresource>
+</RCC>

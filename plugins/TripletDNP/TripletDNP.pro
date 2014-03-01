@@ -46,3 +46,6 @@ macx{
 FORMS += \
     ConcentrationCalculator.ui \
     FrequencyCalculator.ui
+
+RESOURCES += \
+    resources.qrc

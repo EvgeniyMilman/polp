@@ -263,3 +263,29 @@ void MainWindow::on_toolsWidget_tabCloseRequested(int index){
     if(ui->toolsWidget->count()==0)
         ui->toolsWidget->hide();
 }
+
+void MainWindow::on_actionProjectSave_triggered(){
+    if(ProjectManager::instance()->currentProject()->status() == Project::Unsaved){
+        if(ProjectManager::instance()->currentProject()->getFilename() == PROJECT_DEFAULT_NAME){
+            on_actionProjectSave_As_triggered();
+        }else{
+            ProjectManager::instance()->saveCurrentProject(ProjectManager::instance()->currentProject()->getFilename());
+        }
+    }
+}
+
+void MainWindow::on_actionProjectSave_As_triggered(){
+    QString filename = QFileDialog::getSaveFileName(this,"Save Project","","Polpcontrol project file (*.pcp)");
+    if(!filename.isEmpty()){
+        ProjectManager::instance()->saveCurrentProject(filename);
+    }
+}
+
+void MainWindow::on_actionProjectOpen_triggered(){
+    QString filename = QFileDialog::getOpenFileName(this,"Open Project","","Polpcontrol project file (*.pcp)");
+    if(!filename.isEmpty()){
+        if (ProjectManager::instance()->loadFromFile(filename)!=0){ //error happend
+            QMessageBox::information(this,"Failed to load a project",ProjectManager::instance()->error());
+        }
+    }
+}

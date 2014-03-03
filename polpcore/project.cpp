@@ -50,6 +50,14 @@ void Project::removeItem(ProjectItem *item){
     emit projectChanged();
 }
 
+Project::Status Project::status(){
+    return Unsaved;
+}
+
+QString Project::getFilename(){
+    return filename;
+}
+
 
 ProjectItem::ProjectItem(QObject *parent):QObject(parent){
    analyser =NULL;

@@ -50,6 +50,9 @@ private slots:
     void on_actionFileOpen_triggered();
     void on_actionFileSave_triggered();
     void on_toolsWidget_tabCloseRequested(int index);
+    void on_actionProjectSave_triggered();
+    void on_actionProjectSave_As_triggered();
+    void on_actionProjectOpen_triggered();
 };
 
 #endif // MAINWINDOW_H

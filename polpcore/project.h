@@ -6,8 +6,16 @@
 #include "plugins.h"
 #include "data.h"
 
+
+
 class ProjectItem : public QObject{
+    Q_OBJECT
 public:
+    enum ProjectItemType{
+        Item             =0,
+        SimulationItem   =1,
+        DeviceItem       =2
+    };
     explicit ProjectItem(QObject *parent = 0);
     virtual ~ProjectItem();
     QString title;
@@ -19,6 +27,7 @@ public:
 };
 
 class SimulationProjectItem :public ProjectItem{
+    Q_OBJECT
 public:
     explicit SimulationProjectItem(QObject *parent = 0);
     Simulation* simulation;
@@ -27,6 +36,7 @@ public:
 };
 
 class DeviceProjectItem :public ProjectItem{
+    Q_OBJECT
 public:
     explicit DeviceProjectItem(QObject *parent = 0);
     Device* device;
@@ -52,7 +62,7 @@ public:
     void addItem(Data* data, QString preferedview);
     void removeItem(ProjectItem* item);
     Status status();
-
+    QString getFilename();
 public slots:
 
 private:

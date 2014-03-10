@@ -115,7 +115,7 @@ int ProjectManager::loadFromFile(QString filename){
     if(version ==1){
         loadProjectV1(in);
     }else{
-        errormessage = "Polpcontrol does not support this version of project file.";
+        errormessage = "Polpcontrol does not support this project version.";
         file.close();
         return -1;
     }

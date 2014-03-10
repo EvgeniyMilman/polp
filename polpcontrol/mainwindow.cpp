@@ -285,7 +285,12 @@ void MainWindow::on_actionProjectOpen_triggered(){
     QString filename = QFileDialog::getOpenFileName(this,"Open Project","","Polpcontrol project file (*.pcp)");
     if(!filename.isEmpty()){
         if (ProjectManager::instance()->loadFromFile(filename)!=0){ //error happend
-            QMessageBox::information(this,"Failed to load a project",ProjectManager::instance()->error());
+            QMessageBox msgBox(QMessageBox::Information,
+                               "Failed to load a project",
+                               ProjectManager::instance()->error(),
+                               QMessageBox::Ok, this,
+                               Qt::Sheet);
+            msgBox.exec();
         }
     }
 }

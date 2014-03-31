@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>558</width>
-    <height>393</height>
+    <width>606</width>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,12 +20,6 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QSplitter" name="leftsplitter">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -40,49 +34,97 @@
         <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
       </widget>
-      <widget class="QWidget" name="widget" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QSplitter" name="toolsplitter">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+      <widget class="QSplitter" name="analesersplitter">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QSplitter" name="toolsplitter">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <widget class="QSplitter" name="viewsplitter">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <widget class="QStackedWidget" name="viewstackedWidget"/>
+         <widget class="QScrollArea" name="controlscrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <widget class="QSplitter" name="analesersplitter">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>77</width>
+             <height>188</height>
+            </rect>
            </property>
-           <widget class="QSplitter" name="viewsplitter">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <widget class="QStackedWidget" name="viewstackedWidget"/>
-            <widget class="QStackedWidget" name="controlstackedWidget"/>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QStackedWidget" name="controlstackedWidget"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QScrollArea" name="toolscrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>77</width>
+            <height>226</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QTabWidget" name="toolsWidget">
+             <property name="documentMode">
+              <bool>false</bool>
+             </property>
+             <property name="tabsClosable">
+              <bool>true</bool>
+             </property>
+             <property name="movable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QScrollArea" name="analyserscrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents_3">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>77</width>
+           <height>430</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
            <widget class="QStackedWidget" name="analyserstackedWidget">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
             <widget class="QWidget" name="page"/>
             <widget class="QWidget" name="page_2"/>
            </widget>
-          </widget>
-          <widget class="QTabWidget" name="toolsWidget">
-           <property name="documentMode">
-            <bool>false</bool>
-           </property>
-           <property name="tabsClosable">
-            <bool>true</bool>
-           </property>
-           <property name="movable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </widget>
-        </item>
-       </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -93,7 +135,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>558</width>
+     <width>606</width>
      <height>22</height>
     </rect>
    </property>

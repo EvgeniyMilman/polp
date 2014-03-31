@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
         ui->analesersplitter->setStretchFactor(1, 0);
         ui->toolsplitter->setStretchFactor(0, 1);
         ui->toolsplitter->setStretchFactor(1, 0);
-    ui->controlstackedWidget->hide();
+    ui->controlscrollArea->hide();
     loadViews();
     loadAnalysers();
     loadSimulations();
@@ -112,7 +112,7 @@ void MainWindow::loadTools(){
         mapper->setMapping(action,(QObject*)tool);
     }
     connect(mapper, SIGNAL(mapped(QObject*)), this, SLOT(tool_selected(QObject*)));
-    ui->toolsWidget->hide();
+    ui->toolscrollArea->hide();
 }
 
 void MainWindow::displayData(Data *data){
@@ -134,6 +134,9 @@ void MainWindow::analyse(){
         item->analyser = currentAnalyser;
         datalist.append(item->data);
     }
+    if(currentData != NULL){
+        disconnect(currentData ,SIGNAL(dataChanged()),this,SLOT(currentDataChangeHandler()));
+    }
     if(datalist.size()==1){
        currentData = currentAnalyser->analyse(datalist.at(0));
     }else if (datalist.size()>1){
@@ -141,8 +144,13 @@ void MainWindow::analyse(){
     }else if(datalist.size()==0){
         currentData=NULL;
     }
+    if(currentData != NULL){
+        connect(currentData ,SIGNAL(dataChanged()),this,SLOT(currentDataChangeHandler()));
+    }
     displayData(currentData);
+
 }
+
 void MainWindow::setCurrentView(QString viewtitle){
     setCurrentView(PluginManager::instance()->findView(viewtitle));
 }
@@ -158,7 +166,6 @@ void MainWindow::view_selected(QString viewtitle){
         item->view = currentView;
     }
     displayData(currentData);
-
 }
 
 void MainWindow::simulation_add(QString simulationtitle){
@@ -195,10 +202,10 @@ void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
         item->itemSelected();
         setCurrentView(item->view);
         if(control!=NULL){
-            ui->controlstackedWidget->show();
+            ui->controlscrollArea->show();
             ui->controlstackedWidget->setCurrentWidget(control);
         }else{
-            ui->controlstackedWidget->hide();
+            ui->controlscrollArea->hide();
         }
     }
     analyse();
@@ -207,9 +214,9 @@ void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
 void MainWindow::onAnalyserBoxIndexChanged(int i){
     currentAnalyser = (Analyser*)analyserBox->currentData().value<void*>();
     if(currentAnalyser->controlPane()==NULL){
-        ui->analyserstackedWidget->hide();
+        ui->analyserscrollArea->hide();
     }else{
-        ui->analyserstackedWidget->show();
+        ui->analyserscrollArea->show();
         ui->analyserstackedWidget->setCurrentWidget(currentAnalyser->controlPane());
     }
     analyse();
@@ -219,11 +226,15 @@ void MainWindow::tool_selected(QObject *obj){
     Tool* tool = (Tool*)obj;
     ui->toolsWidget->addTab(tool->toolPane(),tool->title());
     ui->toolsWidget->setCurrentWidget(tool->toolPane());
-    ui->toolsWidget->show();
+    ui->toolscrollArea->show();
 }
 
 void MainWindow::showSettings(){
     QMessageBox::information(this,"TODO::","Not implemented");
+}
+
+void MainWindow::currentDataChangeHandler(){
+    displayData(currentData);
 }
 
 void MainWindow::on_actionNew_triggered(){
@@ -261,7 +272,7 @@ void MainWindow::on_actionFileSave_triggered(){
 void MainWindow::on_toolsWidget_tabCloseRequested(int index){
     ui->toolsWidget->removeTab(index);
     if(ui->toolsWidget->count()==0)
-        ui->toolsWidget->hide();
+        ui->toolscrollArea->hide();
 }
 
 void MainWindow::on_actionProjectSave_triggered(){

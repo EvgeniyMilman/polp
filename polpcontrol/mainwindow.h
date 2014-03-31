@@ -45,7 +45,8 @@ private slots:
     void onProjectItemSelectionChanged(QItemSelection item);
     void onAnalyserBoxIndexChanged(int index);
     void tool_selected(QObject*);
-   void showSettings();
+    void showSettings();
+    void currentDataChangeHandler();
     void on_actionFileNew_triggered();
     void on_actionFileOpen_triggered();
     void on_actionFileSave_triggered();

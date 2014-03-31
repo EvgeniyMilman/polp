@@ -24,7 +24,6 @@ public:
     virtual QWidget * controlPane()=0;
     virtual Data * analyse(Data* data)=0;
     virtual Data * analyse(QList<Data*> dataset)=0;
-
 };
 
 class Device{

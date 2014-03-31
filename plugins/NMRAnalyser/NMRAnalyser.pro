@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += widgets
+QT       += widgets gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += printsupport
 
@@ -13,10 +13,12 @@ TEMPLATE = lib
 
 DEFINES += NMRANALYSER_LIBRARY
 
-SOURCES += nmranalyser.cpp
+SOURCES += nmranalyser.cpp \
+    nmrcontrolform.cpp
 
 HEADERS += nmranalyser.h\
-        nmranalyser_global.h
+        nmranalyser_global.h \
+    nmrcontrolform.h
 
 unix {
     target.path = /usr/lib
@@ -41,3 +43,6 @@ macx{
         thisplugun.commands = cp $$OUT_PWD/$$thisplugun.target   $$OUT_PWD/../../polpcontrol/plugins/;
         QMAKE_POST_LINK+= $$thisplugun.commands
 }
+
+FORMS += \
+    nmrcontrolform.ui

@@ -67,6 +67,19 @@ void Data2D::addCurve(QString curve, QVector<double> *x, QVector<double> *y){
     ydata.insert(curve, new QVector<double>(*y));
 }
 
+void Data2D::removeCurve(QString curve){
+  QVector<double> * cur =   xdata.value(curve);
+  xdata.remove(curve);
+  if(cur !=0){
+      delete cur;
+  }
+  cur = ydata.value(curve);
+  ydata.remove(curve);
+  if(cur !=0){
+      delete cur;
+  }
+}
+
 
 DataBin::DataBin(QObject *parent):Data(parent){
     _size =0;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>250</width>
-    <height>544</height>
+    <height>570</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,36 +19,59 @@
      <property name="title">
       <string>General settings</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>DC offset (%)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="offsetSpinBox">
+          <property name="value">
+           <double>5.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Skip(%)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="skipSpinBox"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>DW time</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="dwtimeSpinBox"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="zerofillcheckBox">
         <property name="text">
-         <string>DC offset (%)</string>
+         <string>Zero-Fill</string>
         </property>
        </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="offsetSpinBox"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Skip</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="skipSpinBox"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>DW time</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QDoubleSpinBox" name="wdtimeSpinBox"/>
       </item>
      </layout>
     </widget>
@@ -100,6 +123,11 @@
           <string>&lt;NONE&gt;</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Exponential Window</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item>
@@ -112,7 +140,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="windowTimeConstantSpinBox"/>
+         <widget class="QDoubleSpinBox" name="windowTimeConstantSpinBox">
+          <property name="maximum">
+           <double>9999.989999999999782</double>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

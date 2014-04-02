@@ -23,7 +23,7 @@ int randInt(int low, int high){
 
 int SimpleView::setData(Data *data){
     if(qobject_cast<Data2D*>(data)){
-        qsrand(8);
+        qsrand(2);
         ui->stackedWidget->setCurrentWidget(ui->plot);
         Data2D* data2d  = qobject_cast<Data2D*>(data);
         ui->plot->clearGraphs();

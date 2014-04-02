@@ -13,12 +13,10 @@ TEMPLATE = lib
 
 DEFINES += NMRANALYSER_LIBRARY
 
-SOURCES += nmranalyser.cpp \
-    nmrcontrolform.cpp
+SOURCES += nmranalyser.cpp
 
 HEADERS += nmranalyser.h\
-        nmranalyser_global.h \
-    nmrcontrolform.h
+        nmranalyser_global.h
 
 unix {
     target.path = /usr/lib

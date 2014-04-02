@@ -36,6 +36,49 @@ QWidget *NMRAnalyser::controlPane(){
 Data *NMRAnalyser::analyse(Data *_data){
     currentdata = (Data2D*) _data;
     _analyse();
+    QVariant tmp = "1/2";
+    data->setParameter("view_split",tmp);
+    tmp = "Voltage (V)";
+    data->setParameter("view_0_y",tmp);
+    tmp = "Time (us)";
+    data->setParameter("view_0_x",tmp);
+    tmp = "a.u.";
+    data->setParameter("view_1_y",tmp);
+    tmp = "Frequency (kHz)";
+    data->setParameter("view_1_x",tmp);
+    tmp = 0;
+    data->setParameter("view.real.plot",tmp);
+    data->setParameter("view.imag.plot",tmp);
+    data->setParameter("view.abs.plot",tmp);
+
+    tmp=1;
+    data->setParameter("view.realFT.plot",tmp);
+    data->setParameter("view.imagFT.plot",tmp);
+    data->setParameter("view.absFT.plot",tmp);
+
+    tmp = qVariantFromValue(QColor(Qt::red));
+    data->setParameter("view.realFT.color",tmp);
+    data->setParameter("view.real.color",tmp);
+
+    tmp = qVariantFromValue(QColor(Qt::green));
+    data->setParameter("view.imagFT.color",tmp);
+    data->setParameter("view.imag.color",tmp);
+
+    tmp = qVariantFromValue(QColor(Qt::blue));
+    data->setParameter("view.absFT.color",tmp);
+    data->setParameter("view.abs.color",tmp);
+
+    tmp = "Real";
+    data->setParameter("view.realFT.title",tmp);
+    data->setParameter("view.real.title",tmp);
+
+    tmp = "Imaginary";
+    data->setParameter("view.imagFT.title",tmp);
+    data->setParameter("view.imag.title",tmp);
+
+    tmp = "Absolute";
+    data->setParameter("view.absFT.title",tmp);
+    data->setParameter("view.abs.title",tmp);
     return this->data;
 }
 
@@ -81,7 +124,6 @@ void NMRAnalyser::_loadData(QVector<double>* realX,QVector<double>* realY,QVecto
     }
     if(ui->zerofillcheckBox->isChecked()){
         int size = real->size();
-        qDebug("%i\n",size);
         double time = timedomain->at(size-1);
         double timestep = timedomain->at(1)-timedomain->at(0);
         for(int i = 0; i<size*4;i++){

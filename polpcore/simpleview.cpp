@@ -47,7 +47,7 @@ int SimpleView::setData(Data *data){
             QCPGraph* graph = ui->plot->addGraph(rects[plot]->axis(QCPAxis::atBottom),rects[plot]->axis(QCPAxis::atLeft));
             graph->setData(*(data2d->x(curve)),*(data2d->y(curve)));
 
-            par = "view."+curve+".plot";
+            par = "view."+curve+".color";
             tmp = data->parameter(par);
             QColor col = (!tmp.isNull() && tmp.type()==QVariant::Color)?tmp.value<QColor>():QColor();
             QPen pen;
@@ -108,17 +108,17 @@ QVector<QCPAxisRect *> SimpleView::_preparePlotWidget(Data2D *data){
         }
     }
     for(int i= 0; i< col*row; i++){
-        par = "view_"+QString(i)+"_x";
+        par = "view_"+QString::number(i)+"_x";
         tmp = data->parameter(par);
         QString x = (!tmp.isNull() && tmp.type()==QVariant::String)?tmp.toString():"X";
         rects[i]->axis(QCPAxis::atBottom)->setLabel(x);
 
-        par = "view_"+QString(i)+"_y";
+        par = "view_"+QString::number(i)+"_y";
         tmp = data->parameter(par);
         QString y = (!tmp.isNull() && tmp.type()==QVariant::String)?tmp.toString():"Y";
         rects[i]->axis(QCPAxis::atLeft)->setLabel(y);
 
-        par = "view_"+QString(i)+"_legend";
+        par = "view_"+QString::number(i)+"_legend";
         tmp = data->parameter(par);
         bool leg = (!tmp.isNull() && tmp.type()==QVariant::Bool)?tmp.toBool():true;
         if(leg){
@@ -129,9 +129,9 @@ QVector<QCPAxisRect *> SimpleView::_preparePlotWidget(Data2D *data){
         }else {
             legends.append(0);
         }
-        par = "view_"+QString(i)+"_type";
+        par = "view_"+QString::number(i)+"_type";
         tmp = data->parameter(par);
-        QString type = (!tmp.isNull() && tmp.type()==QVariant::String)?tmp.toString():"log";
+        QString type = (!tmp.isNull() && tmp.type()==QVariant::String)?tmp.toString():"lin";
         if(type =="lin"){
             rects[i]->axis(QCPAxis::atLeft)->setScaleType(QCPAxis::stLinear);
         } else if(type=="log"){

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
+    <width>267</width>
     <height>570</height>
    </rect>
   </property>
@@ -194,13 +194,6 @@
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="showWindowBox">
-        <property name="text">
-         <string>Display Window Function</string>
-        </property>
-       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_7">

@@ -1,6 +1,9 @@
 #include "nmranalyser.h"
 #include "ui_nmrcontrolform.h"
 #include <math.h>
+#include <fftw3.h>
+
+#define PI 3.141592
 
 NMRAnalyser::NMRAnalyser(QWidget *parent) : QWidget(parent), ui(new Ui::NMRControlForm),data(new Data2D){
     ui->setupUi(this);
@@ -34,7 +37,9 @@ QWidget *NMRAnalyser::controlPane(){
 }
 
 Data *NMRAnalyser::analyse(Data *_data){
+    multiset = false;
     currentdata = (Data2D*) _data;
+    this->data->startEdit();
     _analyse();
     QVariant tmp = "1/2";
     data->setParameter("view_split",tmp);
@@ -79,10 +84,70 @@ Data *NMRAnalyser::analyse(Data *_data){
     tmp = "Absolute";
     data->setParameter("view.absFT.title",tmp);
     data->setParameter("view.abs.title",tmp);
+
+    if(ui->abscheckBox->isChecked()){
+        data->addCurve("abs",timedomain,abs);
+    }
+    if(ui->realcheckBox->isChecked()){
+        data->addCurve("real",timedomain,real);
+    }
+    if(ui->imagcheckBox->isChecked()){
+        data->addCurve("imag",timedomain,imag);
+    }
+    if(ui->absFTcheckBox->isChecked()){
+        data->addCurve("absFT",freqdomain,absFT);
+    }
+    if(ui->realFTcheckBox->isChecked()){
+        data->addCurve("realFT",freqdomain,realFT);
+    }
+    if(ui->imagFTcheckBox->isChecked()){
+        data->addCurve("imagFT",freqdomain,imagFT);
+    }
+    ui->absFTcheckBox->setEnabled(true);
+    ui->realFTcheckBox->setEnabled(true);
+    ui->imagFTcheckBox->setEnabled(true);
+    this->data->stopEdit();
     return this->data;
 }
 
 Data *NMRAnalyser::analyse(QList<Data *> dataset){
+    multiset = true;
+    this->dataset = dataset;
+    data->startEdit();
+    int i=0;
+    Q_FOREACH(Data* _data ,dataset){
+        currentdata = (Data2D*) _data;
+        if(currentdata != 0 && currentdata->curvers().size()==2){
+            _analyse();
+            double realInt , imagInt,absInt;
+            double mult = freqdomain->at(1)-freqdomain->at(0);
+            _integrate(&realInt,&imagInt,&absInt);
+            qDebug("%f  %f %f ",realInt*mult,imagInt*mult,absInt*mult);
+            data->addPoint("real",i,realInt*mult);
+            data->addPoint("imag",i,imagInt*mult);
+            data->addPoint("abs",i,absInt*mult);
+            i++;
+        }
+    }
+    QVariant tmp = "1/1";
+    data->setParameter("view_split",tmp);
+    tmp = "a.u.";
+    data->setParameter("view_0_y",tmp);
+    tmp = "Data index";
+    data->setParameter("view_0_x",tmp);
+    if(!ui->abscheckBox->isChecked()){
+        data->removeCurve("abs");
+    }
+    if(!ui->realcheckBox->isChecked()){
+        data->removeCurve("real");
+    }
+    if(!ui->imagcheckBox->isChecked()){
+        data->removeCurve("imag");
+    }
+    ui->absFTcheckBox->setEnabled(false);
+    ui->realFTcheckBox->setEnabled(false);
+    ui->imagFTcheckBox->setEnabled(false);
+    data->stopEdit();
     return this->data;
 }
 
@@ -136,7 +201,6 @@ void NMRAnalyser::_loadData(QVector<double>* realX,QVector<double>* realY,QVecto
 }
 
 void NMRAnalyser::_analyse(){
-    this->data->startEdit();
     real->clear();
     imag->clear();
     realFT->clear();
@@ -159,30 +223,11 @@ void NMRAnalyser::_analyse(){
             _calcDCoffset(realY,imagY,dcreal,dcimag);
             _loadData(realX,realY,imagX,imagY,dcreal,dcimag);
             _calcFT();
-            if(ui->abscheckBox->isChecked()){
-                data->addCurve("abs",timedomain,abs);
-            }
-            if(ui->realcheckBox->isChecked()){
-                data->addCurve("real",timedomain,real);
-            }
-            if(ui->imagcheckBox->isChecked()){
-                data->addCurve("imag",timedomain,imag);
-            }
-            if(ui->absFTcheckBox->isChecked()){
-                data->addCurve("absFT",freqdomain,absFT);
-            }
-            if(ui->realFTcheckBox->isChecked()){
-                data->addCurve("realFT",freqdomain,realFT);
-            }
-            if(ui->imagFTcheckBox->isChecked()){
-                data->addCurve("imagFT",freqdomain,imagFT);
-            }
         }else {
             //TODO::error
-             qDebug("TODO:: error:: Wrond data format");
+            qDebug("TODO:: error:: Wrond data format");
         }
     }
-    this->data->stopEdit();
 }
 
 double NMRAnalyser::windowFunction(int index, double time, double timeconst){
@@ -196,41 +241,129 @@ double NMRAnalyser::windowFunction(int index, double time, double timeconst){
 
 void NMRAnalyser::_calcFT()
 {
+    fftw_complex *in, *out;
+    fftw_plan p;
+    int N = real->size();
+    in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    p = fftw_plan_dft_1d(N, in, out, FFTW_BACKWARD, FFTW_ESTIMATE);
+    for(int i=0 ;i<N;i++){
+        int mul = (i%2==0)?1:-1;
+        in[i][0] = (*real)[i]*mul;
+        in[i][1] = (*imag)[i]*mul;
+    }
+    fftw_execute(p); /* repeat as needed */
+    if(ui->autophaseCheckBox->isChecked()){
+        //calc phase
+        double intgReal=0;
+        double intgImag = 0;
+        for(int i=0;i<N;i++){
+            intgReal += out[i][0];
+            intgImag += out[i][1];
+        }
+        double phase = atan(-intgImag/intgReal)*180./PI;
+        if(phase < 0){
+            phase +=360.;
+        }
+        ui->phaseSpinBox->setValue(phase);
+    }
+    int n  = (N%2!=0)?-(N - 1)/2:-N/2;
+    double dwell = timedomain->at(1)-timedomain->at(0);
+    double phase = ui->phaseSpinBox->value();
+    for(int i=0 ;i<N;i++){
+        double sinPhase = sin(phase*PI/180.);
+        double cosPhase = cos(phase*PI/180.);
+        double realV =out[i][0]*2.0/N;
+        double imagV =out[i][1]*2.0/N;
+        (*realFT).append(realV * cosPhase - imagV * sinPhase);
+        (*imagFT).append(imagV * cosPhase + realV * sinPhase);
+        absFT->append(sqrt(realV*realV + imagV*imagV));
+        freqdomain->append(1000/dwell/N*n);
+        n++;
+    }
+    fftw_destroy_plan(p);
+    fftw_free(in); fftw_free(out);
 
+}
+
+void NMRAnalyser::_integrate(double *realInt, double *imagInt, double *absInt){
+    int N = realFT->size();
+    *realInt = (realFT->at(0)+realFT->at(N-1))/2;
+    *imagInt = (imagFT->at(0)+imagFT->at(N-1))/2;
+    *absInt = (absFT->at(0)+absFT->at(N-1))/2;
+       for(int i = 1;i<N-1;i++){
+           *realInt = (*realInt) + (*realFT)[i];
+           *imagInt = (*imagInt) + (*imagFT)[i];
+           *absInt =  (*absInt) + (*absFT)[i];
+       }
 }
 
 
 void NMRAnalyser::on_skipSpinBox_valueChanged(double val){
-    _analyse();
+    if(multiset){
+        analyse(dataset);
+    }else{
+        analyse(currentdata);
+    }
 }
 
 void NMRAnalyser::on_dwtimeSpinBox_valueChanged(double val){
     data->setParameter("dw",qVariantFromValue(val));
-    _analyse();
+    if(multiset){
+        analyse(dataset);
+    }else{
+        analyse(currentdata);
+    }
 }
 
 void NMRAnalyser::on_offsetSpinBox_valueChanged(double val){
-    _analyse();
+    if(multiset){
+        analyse(dataset);
+    }else{
+        analyse(currentdata);
+    }
 }
 
 void NMRAnalyser::on_zerofillcheckBox_clicked(){
-    _analyse();
+    if(multiset){
+        analyse(dataset);
+    }else{
+        analyse(currentdata);
+    }
 }
 
 void NMRAnalyser::on_autophaseCheckBox_clicked(){
-
+    if(multiset){
+        analyse(dataset);
+    }else{
+        analyse(currentdata);
+    }
 }
 
 void NMRAnalyser::on_phaseSpinBox_valueChanged(double arg1){
-
+    if(!ui->autophaseCheckBox->isChecked()){
+        if(multiset){
+            analyse(dataset);
+        }else{
+            analyse(currentdata);
+        }
+    }
 }
 
 void NMRAnalyser::on_windowFunctionBox_currentIndexChanged(int index){
-    _analyse();
+    if(multiset){
+        analyse(dataset);
+    }else{
+        analyse(currentdata);
+    }
 }
 
 void NMRAnalyser::on_windowTimeConstantSpinBox_valueChanged(double val){
-    _analyse();
+    if(multiset){
+        analyse(dataset);
+    }else{
+        analyse(currentdata);
+    }
 }
 
 void NMRAnalyser::_displayCheckboxClicked(QCheckBox * checkbox,QString curve, QVector<double> *x,QVector<double>* y ){
@@ -243,15 +376,43 @@ void NMRAnalyser::_displayCheckboxClicked(QCheckBox * checkbox,QString curve, QV
 }
 
 void NMRAnalyser::on_realcheckBox_clicked(){
-    _displayCheckboxClicked(ui->realcheckBox,"real",timedomain,real);
+    if(multiset){
+        if(ui->realcheckBox->isChecked()){
+            analyse(dataset);
+        }else{
+            data->removeCurve("real");
+            emit data->dataChanged();
+        }
+    }else{
+         _displayCheckboxClicked(ui->realcheckBox,"real",timedomain,real);
+    }
 }
 
 void NMRAnalyser::on_imagcheckBox_clicked(){
-    _displayCheckboxClicked(ui->imagcheckBox,"imag",timedomain,imag);
+    if(multiset){
+        if(ui->imagcheckBox->isChecked()){
+            analyse(dataset);
+        }else{
+            data->removeCurve("imag");
+            emit data->dataChanged();
+        }
+    }else{
+        _displayCheckboxClicked(ui->imagcheckBox,"imag",timedomain,imag);
+    }
+
 }
 
 void NMRAnalyser::on_abscheckBox_clicked(){
+    if(multiset){
+        if(ui->abscheckBox->isChecked()){
+            analyse(dataset);
+        }else{
+            data->removeCurve("abs");
+            emit data->dataChanged();
+        }
+    }else{
     _displayCheckboxClicked(ui->abscheckBox,"abs",timedomain,abs);
+    }
 }
 
 void NMRAnalyser::on_showWindowBox_clicked(){
@@ -259,13 +420,24 @@ void NMRAnalyser::on_showWindowBox_clicked(){
 }
 
 void NMRAnalyser::on_realFTcheckBox_clicked(){
+    if(multiset){
+    }else{
     _displayCheckboxClicked(ui->realFTcheckBox,"realFT",freqdomain,realFT);
+    }
 }
 
 void NMRAnalyser::on_imagFTcheckBox_clicked(){
+    if(multiset){
+
+    }else{
     _displayCheckboxClicked(ui->imagFTcheckBox,"imagFT",freqdomain,imagFT);
+    }
 }
 
 void NMRAnalyser::on_absFTcheckBox_clicked(){
+    if(multiset){
+
+    }else{
     _displayCheckboxClicked(ui->absFTcheckBox,"absFT",freqdomain,absFT);
+    }
 }

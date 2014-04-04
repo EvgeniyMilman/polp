@@ -58,6 +58,8 @@ private:
     Ui::NMRControlForm *ui;
     Data2D * data;
     Data2D * currentdata;
+    QList<Data *> dataset;
+    bool multiset;
     QVector<double> * real;
     QVector<double> * imag;
     QVector<double> * abs;
@@ -74,6 +76,7 @@ private:
     double windowFunction(int index, double time,double timeconst);
     void  _displayCheckboxClicked(QCheckBox * checkbox,QString curve, QVector<double> *x,QVector<double>* y );
     void _calcFT();
+    void _integrate(double* realInt,double *imagInt,double* absInt);
 };
 
 #endif // NMRANALYSER_H

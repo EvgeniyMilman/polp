@@ -55,6 +55,7 @@ private slots:
      void on_absFTcheckBox_clicked();
 
 private:
+    bool analysis;
     Ui::NMRControlForm *ui;
     Data2D * data;
     Data2D * currentdata;

@@ -15,6 +15,7 @@ NMRAnalyser::NMRAnalyser(QWidget *parent) : QWidget(parent), ui(new Ui::NMRContr
     freqdomain = new QVector<double>;
     abs = new QVector<double>;
     absFT = new QVector<double>;
+    analysis = false;
 }
 
 NMRAnalyser::~NMRAnalyser(){
@@ -37,6 +38,7 @@ QWidget *NMRAnalyser::controlPane(){
 }
 
 Data *NMRAnalyser::analyse(Data *_data){
+    if(analysis == false){
     multiset = false;
     currentdata = (Data2D*) _data;
     this->data->startEdit();
@@ -107,10 +109,12 @@ Data *NMRAnalyser::analyse(Data *_data){
     ui->realFTcheckBox->setEnabled(true);
     ui->imagFTcheckBox->setEnabled(true);
     this->data->stopEdit();
+    }
     return this->data;
 }
 
 Data *NMRAnalyser::analyse(QList<Data *> dataset){
+    if(analysis == false){
     multiset = true;
     this->dataset = dataset;
     data->startEdit();
@@ -148,6 +152,7 @@ Data *NMRAnalyser::analyse(QList<Data *> dataset){
     ui->realFTcheckBox->setEnabled(false);
     ui->imagFTcheckBox->setEnabled(false);
     data->stopEdit();
+    }
     return this->data;
 }
 
@@ -172,6 +177,8 @@ void NMRAnalyser::_loadData(QVector<double>* realX,QVector<double>* realY,QVecto
     ui->dwtimeSpinBox->setMinimum(datadw);
     ui->dwtimeSpinBox->setSingleStep(datadw);
     int step = data->parameter("dw").toDouble() / datadw;
+    if(step == 0)
+        step =1;
     double skip = ui->skipSpinBox->value();
     double timeconst = ui->windowTimeConstantSpinBox->value();
     int wfindex = ui->windowFunctionBox->currentIndex();
@@ -201,6 +208,7 @@ void NMRAnalyser::_loadData(QVector<double>* realX,QVector<double>* realY,QVecto
 }
 
 void NMRAnalyser::_analyse(){
+    analysis = true;
     real->clear();
     imag->clear();
     realFT->clear();
@@ -221,13 +229,17 @@ void NMRAnalyser::_analyse(){
             double dcreal = 0.;
             double dcimag = 0.;
             _calcDCoffset(realY,imagY,dcreal,dcimag);
+            qDebug("_calcDCoffset");
             _loadData(realX,realY,imagX,imagY,dcreal,dcimag);
+            qDebug("_loadData");
             _calcFT();
+            qDebug("_calcFT");
         }else {
             //TODO::error
             qDebug("TODO:: error:: Wrond data format");
         }
     }
+    analysis = false;
 }
 
 double NMRAnalyser::windowFunction(int index, double time, double timeconst){

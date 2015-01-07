@@ -9,4 +9,5 @@ SUBDIRS += \
     SMDFileFormat \
     GPIBGeneralDevice \
     NMRAnalyser \
-    TripletDNP
+    TripletDNP \
+    ISEFileFormat

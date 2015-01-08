@@ -29,10 +29,6 @@ else:unix: LIBS += -L$$OUT_PWD/../../polpcore/ -lpolpcore
 INCLUDEPATH += $$PWD/../../polpcore
 DEPENDPATH += $$PWD/../../polpcore
 
-win32 {
-    DESTDIR  = $$OUT_PWD/../../ISEFileFormatTest/debug
-}
-
 macx {
     corelib.target = libpolpcore.1.dylib
     corelib.commands = install_name_tool -change libpolpcore.1.dylib  $$OUT_PWD/../../polpcore/libpolpcore.1.dylib $$OUT_PWD/libISEFileFormat.1.0.0.dylib;
@@ -43,4 +39,8 @@ macx{
         thisplugun.target = libISEFileFormat.1.0.0.dylib
         thisplugun.commands = cp $$OUT_PWD/libISEFileFormat.1.0.0.dylib  $$OUT_PWD/../../polpcontrol/plugins/;
         QMAKE_POST_LINK+= $$thisplugun.commands
+}
+
+win32{
+    DESTDIR = $$OUT_PWD/../../polpcontrol/
 }

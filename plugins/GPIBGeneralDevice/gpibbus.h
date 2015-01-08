@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QVariant>
+#include <QList>
 
 #define BUFFFER_SIZE 0x1000
 
@@ -10,21 +11,24 @@
 
 class GPIBBus{
         GPIBBus();
+        ~GPIBBus();
 public:
     static GPIBBus* instance();
 
     int busTimeout;
 
-    int openDev(QVariant dev);
+    unsigned int openDev(QVariant dev);
     void closeDev(QVariant dev);
 
-    int write(QVariant dev, void* data, int count, int* returnCount);
-    int readByte(QVariant dev, char* data);
-    int readBlock(QVariant dev, void* data, int count,int* returnCount);
+    QStringList findDev(QString str);
 
-    int command(QVariant dev,QString command);
-    QString query(QVariant dev,QString command);
-    int queryBlock(QVariant dev,QString command,void* data, int count , int* returnCount);
+    int write(QVariant dev, void* data, int count, long unsigned int* returnCount);
+    int readByte(QVariant dev, char* data);
+    int readBlock(QVariant dev, void* data, int count,long unsigned int* returnCount);
+
+    int gpib_command(QVariant dev,QString command);
+    QString gpib_query(QVariant dev,QString command);
+    int queryBlock(QVariant dev,QString command,void* data, int count , long unsigned int* returnCount);
 
 private:
     char* databuffer;

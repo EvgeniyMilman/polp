@@ -1,5 +1,6 @@
 #include "gpibgeneraldevice.h"
 #include "ui_GPIBControlPane.h"
+#include "gpibbus.h"
 
 GPIBGeneralDevice::GPIBGeneralDevice(QWidget *parent):QWidget(parent),ui(new Ui::GPIBControlPane)
 {
@@ -7,7 +8,7 @@ GPIBGeneralDevice::GPIBGeneralDevice(QWidget *parent):QWidget(parent),ui(new Ui:
 
 QStringList GPIBGeneralDevice::devices()
 {
-    return QStringList();
+    return GPIBBus::instance()->findDev("");
 }
 
 QWidget *GPIBGeneralDevice::controlPane()

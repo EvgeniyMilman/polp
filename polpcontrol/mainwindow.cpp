@@ -266,7 +266,23 @@ void MainWindow::on_actionFileOpen_triggered(){
 }
 
 void MainWindow::on_actionFileSave_triggered(){
-    QMessageBox::information(this,"TODO::","Not implemented");
+    QString  sel_filter;
+    QString file = QFileDialog::getSaveFileName(this, "Save file", QString(), PluginManager::instance()->fileFilters(),&sel_filter);
+    FileFormat* fileformat = PluginManager::instance()->fileFormat(sel_filter);
+    if(fileformat!=NULL && !file.isEmpty()){
+        Data2D* data =NULL;
+        Q_FOREACH(const QModelIndex &index, ui->projectView->selectionModel()->selectedIndexes()){
+            ProjectItem* item = (ProjectItem*)(ui->projectView->model()->data(index,Qt::UserRole).value<void*>());
+            data = (Data2D*)item->data;
+        }
+        if(data!=NULL){
+        data->setParameter("filename",file);
+        bool ok = (fileformat->saveData(data))?false:true;
+        if(!ok){
+             QMessageBox::information(this,"Save file",fileformat->error());
+        }
+        }
+    }
 }
 
 void MainWindow::on_toolsWidget_tabCloseRequested(int index){

@@ -14,13 +14,15 @@ DEFINES += GPIBGENERALDEVICE_LIBRARY
 SOURCES += gpibgeneraldevice.cpp \
     gpibgeneralplugincollection.cpp \
     gpibdeviceview.cpp \
-    gpibbus.cpp
+    gpibbus.cpp \
+    osciloscope.cpp
 
 HEADERS += gpibgeneraldevice.h\
         gpibgeneraldevice_global.h \
     gpibgeneralplugincollection.h \
     gpibdeviceview.h \
-    gpibbus.h
+    gpibbus.h \
+    osciloscope.h
 
 unix {
     target.path = /usr/lib
@@ -47,4 +49,16 @@ macx{
 
 FORMS += \
     GPIBDeviceView.ui \
-    GPIBControlPane.ui
+    GPIBControlPane.ui \
+    OsciloscopeControlPane.ui
+
+win32{
+    DESTDIR = ./../../polpcontrol/
+}
+win32{
+    LIBS += -L'C://Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc/' -lvisa32
+    INCLUDEPATH += 'C://Program Files (x86)/IVI Foundation/VISA/WinNT/include'
+    DEPENDPATH += 'C://Program Files (x86)/IVI Foundation/VISA/WinNT/include'
+
+    PRE_TARGETDEPS += 'C://Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc/visa32.lib'
+}

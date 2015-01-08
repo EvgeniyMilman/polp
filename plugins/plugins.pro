@@ -8,6 +8,8 @@ TEMPLATE = subdirs
 SUBDIRS += \
     SMDFileFormat \
     GPIBGeneralDevice \
-    NMRAnalyser \
+  # NMRAnalyser \
     TripletDNP \
-    ISEFileFormat
+    ISEFileFormat \
+    CSVFileFormat
+

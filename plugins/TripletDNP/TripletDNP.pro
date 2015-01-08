@@ -49,3 +49,8 @@ FORMS += \
 
 RESOURCES += \
     resources.qrc
+
+
+win32{
+    DESTDIR = ./../../polpcontrol/
+}

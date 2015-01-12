@@ -123,7 +123,6 @@ void MainWindow::displayData(Data *data){
     }else{
         Data2D* tmp = new Data2D;
         currentView->setData(tmp);
-        delete tmp;
     }
 }
 
@@ -243,7 +242,12 @@ void MainWindow::on_actionNew_triggered(){
 }
 
 void MainWindow::on_actionFileNew_triggered(){
-    QMessageBox::information(this,"TODO::","Not implemented");
+    QString title = QInputDialog::getText(this,"Title","New Data");
+    if(!title.isEmpty()){
+        Data2D * data = new Data2D;
+        data->setParameter("title",title);
+        ProjectManager::instance()->currentProject()->addItem(data,"SimpleView");
+    }
 }
 
 void MainWindow::on_actionFileOpen_triggered(){
@@ -319,5 +323,23 @@ void MainWindow::on_actionProjectOpen_triggered(){
                                Qt::Sheet);
             msgBox.exec();
         }
+    }
+}
+
+void MainWindow::on_actionCopy_data_triggered(){
+    QString title = QInputDialog::getText(this,"Title","New Data");
+    if(!title.isEmpty()){
+        Data2D * data = new Data2D;
+            Data2D * _currentData =(Data2D *)currentData;
+            if(currentData!=NULL){
+                Q_FOREACH(QString curve, _currentData->curvers()){
+                    data->addCurve(curve,_currentData->x(curve),_currentData->y(curve));
+                }
+                Q_FOREACH(QString param, _currentData->parameterList()){
+                    data->setParameter(param,_currentData->parameter(param));
+                }
+            }
+        data->setParameter("title",title);
+        ProjectManager::instance()->currentProject()->addItem(data,"SimpleView");
     }
 }

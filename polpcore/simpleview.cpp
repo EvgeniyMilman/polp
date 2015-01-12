@@ -4,6 +4,7 @@
 
 SimpleView::SimpleView(QWidget *parent) :QWidget(parent),ui(new Ui::SimpleViewForm){
     ui->setupUi(this);
+    data = 0;
 }
 
 SimpleView::~SimpleView(){
@@ -36,6 +37,8 @@ QWidget *SimpleView::viewPane(){
 int SimpleView::setData(Data *data){
     if(qobject_cast<Data2D*>(data)){
         Data2D* data2d  = qobject_cast<Data2D*>(data);
+        this->data = data;
+        ui->textEdit->setText(data->parameter("script").toString());
         ui->stackedWidget->setCurrentWidget(ui->plot);
         // Prepare Qcustom plot for ploting
         QVector<QCPAxisRect *> rects = _preparePlotWidget(data2d);
@@ -140,4 +143,36 @@ QVector<QCPAxisRect *> SimpleView::_preparePlotWidget(Data2D *data){
         }
     }
     return rects;
+}
+
+void SimpleView::on_plottoolButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void SimpleView::on_scripttoolButton_clicked()
+{
+     ui->stackedWidget->setCurrentIndex(2);
+}
+
+void SimpleView::on_datatoolButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+void SimpleView::on_bintoolButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+//RUN script
+void SimpleView::on_pushButton_clicked()
+{
+
+}
+
+void SimpleView::on_saveScriptpushButton_clicked()
+{
+    if(data != NULL){
+        data->setParameter("script",ui->textEdit->toPlainText());
+    }
 }

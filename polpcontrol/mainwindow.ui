@@ -56,8 +56,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>77</width>
-             <height>188</height>
+             <width>176</width>
+             <height>194</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -77,8 +77,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>77</width>
-            <height>226</height>
+            <width>176</width>
+            <height>234</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -108,8 +108,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>77</width>
-           <height>430</height>
+           <width>57</width>
+           <height>440</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -136,7 +136,7 @@
      <x>0</x>
      <y>0</y>
      <width>606</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProject">
@@ -168,6 +168,8 @@
     <addaction name="actionProjectSave_As"/>
     <addaction name="separator"/>
     <addaction name="menuAdd_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopy_data"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -241,6 +243,11 @@
   <action name="actionFileSave">
    <property name="text">
     <string>Save</string>
+   </property>
+  </action>
+  <action name="actionCopy_data">
+   <property name="text">
+    <string>Copy data</string>
    </property>
   </action>
  </widget>

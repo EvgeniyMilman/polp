@@ -36,11 +36,25 @@ signals:
 
 public slots:
 
+private slots:
+    void on_plottoolButton_clicked();
+
+    void on_scripttoolButton_clicked();
+
+    void on_datatoolButton_clicked();
+
+    void on_bintoolButton_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_saveScriptpushButton_clicked();
+
 private:
     QString error_message;
     Ui::SimpleViewForm* ui;
     QVector<QCPLegend*> legends;
     QVector<QCPAxisRect *> _preparePlotWidget(Data2D* data);
+    Data* data; //Current data
 };
 
 #endif // SIMPLEVIEW_H

@@ -15,14 +15,18 @@ SOURCES += gpibgeneraldevice.cpp \
     gpibgeneralplugincollection.cpp \
     gpibdeviceview.cpp \
     gpibbus.cpp \
-    osciloscope.cpp
+    osciloscope.cpp \
+    hposciloscope.cpp \
+    wavefactory.cpp
 
 HEADERS += gpibgeneraldevice.h\
         gpibgeneraldevice_global.h \
     gpibgeneralplugincollection.h \
     gpibdeviceview.h \
     gpibbus.h \
-    osciloscope.h
+    osciloscope.h \
+    hposciloscope.h \
+    wavefactory.h
 
 unix {
     target.path = /usr/lib
@@ -50,7 +54,8 @@ macx{
 FORMS += \
     GPIBDeviceView.ui \
     GPIBControlPane.ui \
-    OsciloscopeControlPane.ui
+    OsciloscopeControlPane.ui \
+    wavefactory.ui
 
 win32{
     DESTDIR = ./../../polpcontrol/

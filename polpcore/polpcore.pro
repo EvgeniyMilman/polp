@@ -56,5 +56,5 @@ macx {
 }
 
 win32{
-    #DESTDIR  = OUT_PWD/../../polpcontrol/debug
+    DESTDIR  = OUT_PWD/../../polpcontrol/debug
 }

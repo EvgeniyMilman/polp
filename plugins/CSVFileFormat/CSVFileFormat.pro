@@ -37,7 +37,7 @@ QMAKE_POST_LINK+= $$corelib.commands
 
 macx{
         thisplugun.target = libCSVFileFormat.1.0.0.dylib
-        thisplugun.commands = cp $$OUT_PWD/libSCVFileFormat.1.0.0.dylib  $$OUT_PWD/../../polpcontrol/plugins/;
+        thisplugun.commands = cp $$OUT_PWD/libCSVFileFormat.1.0.0.dylib  $$OUT_PWD/../../polpcontrol/plugins/;
         QMAKE_POST_LINK+= $$thisplugun.commands
 }
 

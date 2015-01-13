@@ -39,7 +39,7 @@ int SimpleView::setData(Data *data){
         Data2D* data2d  = qobject_cast<Data2D*>(data);
         this->data = data;
         ui->textEdit->setText(data->parameter("script").toString());
-        ui->stackedWidget->setCurrentWidget(ui->plot);
+        ui->stackedWidget->setCurrentIndex(data->parameter("simpleview_index").toInt());
         // Prepare Qcustom plot for ploting
         QVector<QCPAxisRect *> rects = _preparePlotWidget(data2d);
         Q_FOREACH(QString curve , data2d->curvers()){
@@ -148,21 +148,33 @@ QVector<QCPAxisRect *> SimpleView::_preparePlotWidget(Data2D *data){
 void SimpleView::on_plottoolButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    if(data != NULL){
+        data->setParameter("simpleview_index",0);
+    }
 }
 
 void SimpleView::on_scripttoolButton_clicked()
 {
      ui->stackedWidget->setCurrentIndex(2);
+     if(data != NULL){
+         data->setParameter("simpleview_index",2);
+     }
 }
 
 void SimpleView::on_datatoolButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(3);
+    if(data != NULL){
+        data->setParameter("simpleview_index",3);
+    }
 }
 
 void SimpleView::on_bintoolButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
+    if(data != NULL){
+        data->setParameter("simpleview_index",1);
+    }
 }
 //RUN script
 void SimpleView::on_pushButton_clicked()

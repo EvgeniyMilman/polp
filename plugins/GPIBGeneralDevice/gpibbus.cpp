@@ -1,11 +1,12 @@
 #include "gpibbus.h"
 #include <qglobal.h>
+
+static  GPIBBus* bus= NULL;
 #ifdef Q_OS_WIN32
 #include <visa.h>
-#endif
-static  GPIBBus* bus= NULL;
-
 static ViSession defaultRM;
+#endif
+
 static  char * gpibbuff;
 
 GPIBBus::GPIBBus(){

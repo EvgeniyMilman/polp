@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     loadTools();
     ui->menuTools->addSeparator();
     QAction* settings = ui->menuTools->addAction("Settings");
+    ui->mainToolBar->addAction(ui->actionCopy_data);
     connect(settings, SIGNAL(triggered()),this, SLOT(showSettings()));
 }
 

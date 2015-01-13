@@ -25,6 +25,7 @@ public:
 
     virtual QString preferedView();
     virtual QString deviceClass();
+    void readData(Data* data);
 private slots:
     void on_pushButton_clicked();
     void on_checkBox_stateChanged(int arg1);

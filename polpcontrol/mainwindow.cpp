@@ -329,17 +329,6 @@ void MainWindow::on_actionProjectOpen_triggered(){
 void MainWindow::on_actionCopy_data_triggered(){
     QString title = QInputDialog::getText(this,"Title","New Data");
     if(!title.isEmpty()){
-        Data2D * data = new Data2D;
-            Data2D * _currentData =(Data2D *)currentData;
-            if(currentData!=NULL){
-                Q_FOREACH(QString curve, _currentData->curvers()){
-                    data->addCurve(curve,_currentData->x(curve),_currentData->y(curve));
-                }
-                Q_FOREACH(QString param, _currentData->parameterList()){
-                    data->setParameter(param,_currentData->parameter(param));
-                }
-            }
-        data->setParameter("title",title);
-        ProjectManager::instance()->currentProject()->addItem(data,"SimpleView");
+        ProjectManager::instance()->currentProject()->copyData(currentData,title);
     }
 }

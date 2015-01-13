@@ -61,6 +61,7 @@ public:
     void addItem(Data* data, Device *dev);
     void addItem(Data* data, QString preferedview);
     void removeItem(ProjectItem* item);
+    void copyData(Data* data, QString title);
     Status status();
     QString getFilename();
 public slots:

@@ -58,6 +58,14 @@ QString HPOsciloscope::deviceClass()
     return "Osciloscope HP 548xx";
 }
 
+void HPOsciloscope::readData(Data *data)
+{
+    Data* tmp = this->data;
+    loadData(data);
+    on_pushButton_clicked();
+    loadData(tmp);
+}
+
 void HPOsciloscope::on_pushButton_clicked(){
     //Read data
 

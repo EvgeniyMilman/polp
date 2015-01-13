@@ -17,7 +17,8 @@ SOURCES += gpibgeneraldevice.cpp \
     gpibbus.cpp \
     osciloscope.cpp \
     hposciloscope.cpp \
-    wavefactory.cpp
+    wavefactory.cpp \
+    tmpesrexperiment.cpp
 
 HEADERS += gpibgeneraldevice.h\
         gpibgeneraldevice_global.h \
@@ -26,7 +27,8 @@ HEADERS += gpibgeneraldevice.h\
     gpibbus.h \
     osciloscope.h \
     hposciloscope.h \
-    wavefactory.h
+    wavefactory.h \
+    tmpesrexperiment.h
 
 unix {
     target.path = /usr/lib
@@ -55,7 +57,8 @@ FORMS += \
     GPIBDeviceView.ui \
     GPIBControlPane.ui \
     OsciloscopeControlPane.ui \
-    wavefactory.ui
+    wavefactory.ui \
+    tmpesrexperiment.ui
 
 win32{
     DESTDIR = ./../../polpcontrol/

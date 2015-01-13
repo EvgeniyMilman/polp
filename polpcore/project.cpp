@@ -50,6 +50,21 @@ void Project::removeItem(ProjectItem *item){
     emit projectChanged();
 }
 
+void Project::copyData(Data *_data, QString title){
+    Data2D * data = new Data2D;
+        Data2D * _currentData =(Data2D *)_data;
+        if(_currentData!=NULL){
+            Q_FOREACH(QString curve, _currentData->curvers()){
+                data->addCurve(curve,_currentData->x(curve),_currentData->y(curve));
+            }
+            Q_FOREACH(QString param, _currentData->parameterList()){
+                data->setParameter(param,_currentData->parameter(param));
+            }
+        }
+    data->setParameter("title",title);
+    addItem(data,"SimpleView");
+}
+
 Project::Status Project::status(){
     return Unsaved;
 }

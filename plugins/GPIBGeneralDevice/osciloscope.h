@@ -35,6 +35,11 @@ private slots:
 
     void on_checkBox_4_stateChanged(int arg1);
 
+    void on_func1checkBox_stateChanged(int arg1);
+    void on_func2checkBox_stateChanged(int arg1);
+    void on_func3checkBox_stateChanged(int arg1);
+    void on_func4checkBox_stateChanged(int arg1);
+
 private:
     QString error_message;
     Data * data;

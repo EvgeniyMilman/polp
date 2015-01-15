@@ -26,6 +26,11 @@ public:
     virtual QString preferedView();
     virtual QString deviceClass();
     void readData(Data* data);
+
+signals:
+   void labeNewText(QString);
+   void newProgress(int);
+
 private slots:
     void on_pushButton_clicked();
     void on_checkBox_stateChanged(int arg1);
@@ -35,6 +40,16 @@ private slots:
     void on_checkBox_3_stateChanged(int arg1);
 
     void on_checkBox_4_stateChanged(int arg1);
+
+    void on_func1checkBox_stateChanged(int arg1);
+    void on_func2checkBox_stateChanged(int arg1);
+    void on_func3checkBox_stateChanged(int arg1);
+    void on_func4checkBox_stateChanged(int arg1);
+
+    void on_labeNewText(QString text);
+    void on_newProgress(int pr);
+
+
 
 private:
     QString error_message;

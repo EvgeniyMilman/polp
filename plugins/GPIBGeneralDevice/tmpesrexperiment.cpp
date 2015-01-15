@@ -11,7 +11,11 @@ TmpESRExperiment::TmpESRExperiment(QWidget *parent) :
     ui(new Ui::TmpESRExperiment)
 {
     ui->setupUi(this);
+    wf=0;
+    hposciloscope=0;
+    timer = new QTimer(this);
    connect(ProjectManager::instance(),SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
+   connect(timer,SIGNAL(timeout()),this,SLOT(on_timer()));
 }
 
 TmpESRExperiment::~TmpESRExperiment(){
@@ -27,6 +31,13 @@ QWidget *TmpESRExperiment::toolPane()
     return this;
 }
 
+void TmpESRExperiment::startEXPrun(){
+    if(!abort_me){
+        wf->setDC(wfdata,volt);
+        timer->start(delay);
+    }
+}
+
 void TmpESRExperiment::onProjectChanged(){
     ui->wfcomboBox->clear();
     ui->osciloscopecomboBox->clear();
@@ -34,13 +45,15 @@ void TmpESRExperiment::onProjectChanged(){
     Q_FOREACH(ProjectItem* item , items){
         DeviceProjectItem* devitem = qobject_cast<DeviceProjectItem*>(item);
         if(devitem != NULL){
-            WaveFactory* wf = qobject_cast<WaveFactory*>((QObject*)devitem->device);
+            Device * dev =  devitem->device;
+            QObject* obj = dynamic_cast<QObject*>(dev);
+            WaveFactory* wf = qobject_cast<WaveFactory*>(obj);
             if(wf!=NULL){
                 QVariant var = qVariantFromValue((void*)item->data);
                 ui->wfcomboBox->addItem(item->data->parameter("title").toString(),var);
                 this->wf = wf;
             }
-            HPOsciloscope * osc = qobject_cast<HPOsciloscope*>((QObject*)devitem->device);
+            HPOsciloscope * osc = qobject_cast<HPOsciloscope*>(obj);
             if(osc!=NULL){
                 QVariant var = qVariantFromValue((void*)item->data);
                 ui->osciloscopecomboBox->addItem(item->data->parameter("title").toString(),var);
@@ -51,26 +64,49 @@ void TmpESRExperiment::onProjectChanged(){
 }
 
 void TmpESRExperiment::on_startpushButton_clicked(){
+    progress = 0;
+    if(wf!=NULL && hposciloscope !=NULL){
 
- if(wf!=NULL && hposciloscope !=NULL){
-    disconnect(ProjectManager::instance(),SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
-    Data2D* wfdata = (Data2D*)ui->wfcomboBox->currentData().value<void*>();
-    Data2D* hpdata = (Data2D*)ui->osciloscopecomboBox->currentData().value<void*>();
-    wf->setSource(wfdata,"1");
-    wf->setSourceON(wfdata,true);
-    wf->setMode(wfdata,"DC");
-    wf->setDC(wfdata, ui->dcstartSpinBox->value());
-    double step = ui->dcstepSpinBox->value();
-    double max = ui->dcstopSpinBox->value();
-    if(step != 0){
-        for(double volt=ui->dcstartSpinBox->value(); volt<max; volt=volt+step){
-            wf->setDC(wfdata, volt);
-            QThread::sleep(ui->delaySpinBox->value());
-            hposciloscope->readData(hpdata);
-            QString title = ui->datatitlelineEdit->text()+"_"+QString::number(volt);
-            ProjectManager::instance()->currentProject()->copyData(hpdata,title);
+        if(ui->startpushButton->text() == "Start"){
+            abort_me = false;
+            disconnect(ProjectManager::instance(),SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
+            ui->startpushButton->setText("Stop");
+            delay = ui->delaySpinBox->value()*1000;
+            min = ui->dcstartSpinBox->value();
+            step = ui->dcstepSpinBox->value();
+            max = ui->dcstopSpinBox->value();
+            volt = min;
+            wfdata = (Data2D*)ui->wfcomboBox->currentData().value<void*>();
+            hpdata = (Data2D*)ui->osciloscopecomboBox->currentData().value<void*>();
+            wf->setSource(wfdata,"1");
+            wf->setSourceON(wfdata,true);
+            wf->setMode(wfdata,"DC");
+            datatitle = ui->datatitlelineEdit->text();
+            startEXPrun();
+        }else{
+            abort_me = true;
+            ui->startpushButton->setText("Start");
+            timer->stop();
+            connect(ProjectManager::instance(),SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
         }
     }
-    connect(ProjectManager::instance(),SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
- }
 }
+
+void TmpESRExperiment::on_timer(){
+    if(!abort_me){
+        double steps = (max - min)/step;
+        hposciloscope->readData(hpdata);
+        ProjectManager::instance()->currentProject()->copyData(hpdata,datatitle+"_"+QString::number(volt));
+        progress = progress + 100./steps-1;
+        ui->progressBar->setValue(progress);
+        volt = volt + step;
+        if(volt> max){
+            progress = 100;
+            ui->progressBar->setValue(progress);
+            on_startpushButton_clicked();
+        }else{
+             startEXPrun();
+        }
+    }
+}
+

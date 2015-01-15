@@ -45,13 +45,16 @@ int CSVFileFormat::loadData(Data *data){
 
      line = stream.readLine();
      QStringList titles = line.split(",");
+      for(int i=0;i<titles.length()/2;i++){
+          titles[i*2].remove(titles[i*2].length()-2,2);
+      }
      line = stream.readLine();
             while(!line.isNull()) {
              QStringList datas = line.split(",");
-             for(int i=0;i<titles.length();i++){
+             for(int i=0;i<titles.length()/2;i++){
                 double x = datas[i*2].toDouble();
                 double y = datas[i*2+1].toDouble();
-                data2d->addPoint(titles[i],x, y);
+                data2d->addPoint(titles[i*2],x, y);
              }
              line = stream.readLine();
             }
@@ -80,7 +83,8 @@ int CSVFileFormat::saveData(Data *data){
     QString line;
     QList<QString> curves = data2d->curvers();
     for(int i =0;i<curves.size();i++){
-        line.append(curves[i]);
+        line.append(curves[i]+".X,");
+        line.append(curves[i]+".Y");
         if(i!=curves.size()-1){
             line.append(",");
         }

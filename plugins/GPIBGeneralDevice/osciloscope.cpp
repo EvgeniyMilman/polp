@@ -6,6 +6,9 @@
 Osciloscope::Osciloscope(QWidget *parent):QWidget(parent),ui(new Ui::OsciloscopeControlPane)
 {
     ui->setupUi(this);
+    ui->func2checkBox->setVisible(false);
+    ui->func3checkBox->setVisible(false);
+    ui->func4checkBox->setVisible(false);
 }
 
 QStringList Osciloscope::devices()
@@ -32,8 +35,9 @@ int Osciloscope::loadData(Data *data){
     data->setParameter("view.CH3.color",tmp);
     tmp = qVariantFromValue(QColor(Qt::green));
     data->setParameter("view.CH4.color",tmp);
+    tmp = qVariantFromValue(QColor(Qt::magenta));
+    data->setParameter("view.MATH.color",tmp);
     ui->label->setText("Ready");
-    //ui->progressBar->setVisible(false);
 
     ui->checkBox->setChecked(data->parameter("CH1_checked").isValid()&&data->parameter("CH1_checked").toBool());
     ui->checkBox_2->setChecked(data->parameter("CH2_checked").isValid()&&data->parameter("CH2_checked").toBool());
@@ -59,7 +63,11 @@ QString Osciloscope::deviceClass()
 
 void Osciloscope::on_pushButton_clicked(){
     unsigned long int retCount;
-    QCheckBox * boxes[4] = {ui->checkBox,ui->checkBox_2,ui->checkBox_3,ui->checkBox_4};
+    QCheckBox * boxes[8] = {ui->checkBox,ui->checkBox_2,ui->checkBox_3,ui->checkBox_4,
+                            ui->func1checkBox,ui->func2checkBox,ui->func3checkBox,ui->func3checkBox};
+    QStringList chstrings;
+    chstrings << "CH1" <<"CH2" <<"CH3" <<"CH4" << "MATH"
+                 << "FUNCTION2" <<"FUNCTION3" << "FUNCTION4";
     QVariant vi = data->parameter("gpib_vi");
     GPIBBus *bus = GPIBBus::instance();
     QVariant devId = data->parameter("deviceID");
@@ -67,8 +75,9 @@ void Osciloscope::on_pushButton_clicked(){
     data->setParameter("gpib_vi",vi);
     Data2D* data = (Data2D*)this->data;
     data->startEdit();
-    for(int i = 1; i<=4;i++){
-        QString chstring =QString("CH%1").arg(i);
+
+    for(int i = 1; i<=8;i++){
+        QString chstring =chstrings[i-1];
         if(boxes[i-1]->isChecked()){
             ui->label->setText("Reading "+chstring+" ...");
             ui->progressBar->setValue(0);
@@ -136,5 +145,27 @@ void Osciloscope::on_checkBox_3_stateChanged(int arg1){
 void Osciloscope::on_checkBox_4_stateChanged(int arg1){
     if(data!=NULL){
         data->setParameter("CH4_checked",ui->checkBox_4->isChecked());
+    }
+}
+
+void Osciloscope::on_func1checkBox_stateChanged(int arg1){
+    if(data!=NULL){
+        data->setParameter("FUNCTION1_checked",ui->func1checkBox->isChecked());
+    }
+}
+
+void Osciloscope::on_func2checkBox_stateChanged(int arg1){
+    if(data!=NULL){
+        data->setParameter("FUNCTION2_checked",ui->func2checkBox->isChecked());
+    }
+}
+void Osciloscope::on_func3checkBox_stateChanged(int arg1){
+    if(data!=NULL){
+        data->setParameter("FUNCTION3_checked",ui->func3checkBox->isChecked());
+    }
+}
+void Osciloscope::on_func4checkBox_stateChanged(int arg1){
+    if(data!=NULL){
+        data->setParameter("FUNCTION4_checked",ui->func4checkBox->isChecked());
     }
 }

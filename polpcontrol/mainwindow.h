@@ -54,7 +54,9 @@ private slots:
     void on_actionProjectSave_triggered();
     void on_actionProjectSave_As_triggered();
     void on_actionProjectOpen_triggered();
-    void on_actionCopy_data_triggered();
+    void on_actionDelete_triggered();
+    void on_actionClone_triggered();
+    void on_actionRename_triggered();
 };
 
 #endif // MAINWINDOW_H

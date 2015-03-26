@@ -8,6 +8,10 @@ Project::Project(QObject *parent) :
 {
 }
 
+Project::~Project(){
+    _items.clear();
+}
+
 QList<ProjectItem *> Project::items(){
     return _items;
 }
@@ -44,8 +48,10 @@ void Project::addItem(Data *data,QString preferedview){
     emit projectChanged();
 }
 
-void Project::removeItem(ProjectItem *item){
-    _items.removeOne(item);
+void Project::deleteItems(QList<ProjectItem *> datalist){
+    Q_FOREACH(ProjectItem * item, datalist){
+        _items.removeOne(item);
+    }
     _status = Unsaved;
     emit projectChanged();
 }
@@ -81,6 +87,8 @@ ProjectItem::ProjectItem(QObject *parent):QObject(parent){
 }
 
 ProjectItem::~ProjectItem(){
+   // delete data;
+   // data = NULL;
 }
 
 void ProjectItem::itemSelected(){
@@ -130,12 +138,14 @@ ProjectModel::~ProjectModel(){
 }
 
 QVariant ProjectModel::data(const QModelIndex &index, int role) const{
+    Project* project = ProjectManager::instance()->currentProject();
     if(!index.isValid())
             return QVariant();
-    if ( role == Qt::DisplayRole ) {
-        Project* project = ProjectManager::instance()->currentProject();
+    if (index.row() >= project->items().size())
+            return QVariant();
+    if ( role == Qt::DisplayRole || role == Qt::EditRole ) {
         return project->items().at(index.row())->title;
-    } if(role ==Qt::UserRole){
+    }else if(role ==Qt::UserRole){
         Project* project = ProjectManager::instance()->currentProject();
         QVariant v;
         v.setValue<void*>(project->items().at(index.row()));
@@ -157,27 +167,25 @@ bool ProjectModel::insertRows(int position, int rows, const QModelIndex &parent)
     return false; //TODO::
 }
 
-bool ProjectModel::removeRows(int position, int rows, const QModelIndex &parent)
-{
-    beginRemoveRows(QModelIndex(), position, position + rows - 1);
-    Project* project = ProjectManager::instance()->currentProject();
-    if(project!=NULL){
-        for(int row = 0; row < rows; ++row){
-            project->removeItem(project->items().at(position));
-        }
-     }
-        endRemoveRows();
-        return true;
+bool ProjectModel::removeRows(int position, int rows, const QModelIndex &parent){
+    return false;
 }
 
 bool ProjectModel::setData(const QModelIndex &index, const QVariant &value, int role){
+        if(role == Qt::EditRole){
+            Project* project = ProjectManager::instance()->currentProject();
+            Data * data = project->items().at(index.row())->data;
+            data->setParameter("title",value);
+            project->items().at(index.row())->title = value.toString();
+            return true;
+        }
     return false; //TODO::
 }
 
 Qt::ItemFlags ProjectModel::flags(const QModelIndex &index) const{
     if(!index.isValid())
             return Qt::ItemIsEditable;
-    return QAbstractListModel::flags(index) |  Qt::ItemIsSelectable;
+    return QAbstractListModel::flags(index) |  Qt::ItemIsSelectable |Qt::ItemIsEnabled | Qt::ItemIsEditable;
 }
 
 void ProjectModel::onProjectChanged(){

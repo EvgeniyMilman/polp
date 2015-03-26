@@ -39,8 +39,13 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     loadTools();
     ui->menuTools->addSeparator();
     QAction* settings = ui->menuTools->addAction("Settings");
-    ui->mainToolBar->addAction(ui->actionCopy_data);
+    ui->mainToolBar->addAction(ui->actionFileNew);
+    ui->mainToolBar->addAction(ui->actionClone);
+    ui->mainToolBar->addAction(ui->actionDelete);
     connect(settings, SIGNAL(triggered()),this, SLOT(showSettings()));
+    ui->projectView->addAction(ui->actionClone);
+    ui->projectView->addAction(ui->actionDelete);
+    ui->projectView->addAction(ui->actionRename);
 }
 
 MainWindow::~MainWindow(){
@@ -116,13 +121,14 @@ void MainWindow::loadTools(){
     ui->toolscrollArea->hide();
 }
 
+static Data2D* tmp = new Data2D;
+
 void MainWindow::displayData(Data *data){
     if(data!=NULL){
         if(currentView->setData(data)){
             QMessageBox::information(this,"Error",currentView->error());
         }
     }else{
-        Data2D* tmp = new Data2D;
         currentView->setData(tmp);
     }
 }
@@ -194,7 +200,7 @@ void MainWindow::device_add(QString devicetitle){
     }
 }
 
-void MainWindow::onProjectItemSelectionChanged(QItemSelection item){
+void MainWindow::onProjectItemSelectionChanged(QItemSelection itemsel){
     QModelIndexList indexlist = ui->projectView->selectionModel()->selectedIndexes();
     if(!indexlist.empty()){
         ProjectItem* item = (ProjectItem*)(ui->projectView->model()->data(indexlist[0],Qt::UserRole).value<void*>());
@@ -316,6 +322,7 @@ void MainWindow::on_actionProjectSave_As_triggered(){
 void MainWindow::on_actionProjectOpen_triggered(){
     QString filename = QFileDialog::getOpenFileName(this,"Open Project","","Polpcontrol project file (*.pcp)");
     if(!filename.isEmpty()){
+        ui->projectView->selectionModel()->clearSelection();
         if (ProjectManager::instance()->loadFromFile(filename)!=0){ //error happend
             QMessageBox msgBox(QMessageBox::Information,
                                "Failed to load a project",
@@ -327,9 +334,28 @@ void MainWindow::on_actionProjectOpen_triggered(){
     }
 }
 
-void MainWindow::on_actionCopy_data_triggered(){
+void MainWindow::on_actionDelete_triggered(){
+    ui->projectView->setUpdatesEnabled(false);
+    QList<ProjectItem*> datalist;
+    Q_FOREACH(const QModelIndex &index, ui->projectView->selectionModel()->selectedIndexes()){
+        ProjectItem* item = (ProjectItem*)(ui->projectView->model()->data(index,Qt::UserRole).value<void*>());
+        datalist.append(item);
+    }
+    ui->projectView->selectionModel()->clear();
+    ProjectManager::instance()->currentProject()->deleteItems(datalist);
+    ui->projectView->setUpdatesEnabled(true);
+}
+
+
+void MainWindow::on_actionClone_triggered(){
     QString title = QInputDialog::getText(this,"Title","New Data");
     if(!title.isEmpty()){
         ProjectManager::instance()->currentProject()->copyData(currentData,title);
+    }
+}
+
+void MainWindow::on_actionRename_triggered(){
+    if(ui->projectView->selectionModel()->selectedIndexes().size()>=1){
+        ui->projectView->edit(ui->projectView->selectionModel()->selectedIndexes().at(0));
     }
 }

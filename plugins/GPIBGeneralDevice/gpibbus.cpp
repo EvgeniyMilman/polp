@@ -86,7 +86,11 @@ QStringList qlist;
      ViSession vi;
      unsigned int res = dev.toUInt();
      vi = res;
-     viPrintf(vi,(char*)data);
+     if(vi !=0){
+        viPrintf(vi,(char*)data);
+     }else{
+         //TODO:: handle error
+     }
 #endif
  }
 
@@ -96,9 +100,12 @@ QStringList qlist;
      unsigned int res = dev.toUInt();
       vi = res;
       long unsigned int actual;
-      viRead (vi, (ViBuf)data, 1, &actual);
+      if(vi !=0){
+         viRead (vi, (ViBuf)data, 1, &actual);
+      } // if vi == 0 do nothing NEED to fix it (handle error)
       return actual;
 #endif
+      return 0;
  }
 
  int GPIBBus::readBlock(QVariant dev, void *data, int count, long unsigned int *returnCount){
@@ -106,9 +113,13 @@ QStringList qlist;
      ViSession vi;
      unsigned int res = dev.toUInt();
       vi = res;
-      int readres= viRead (vi, (ViBuf)data, count, returnCount);
+      int readres = 0;
+      if(vi !=0){
+      readres= viRead (vi, (ViBuf)data, count, returnCount);
+      } // if vi == 0 do nothing NEED to fix it (handle error)
        return readres;
 #endif
+       return 0;
  }
 
  int GPIBBus::gpib_command(QVariant dev, QString command){

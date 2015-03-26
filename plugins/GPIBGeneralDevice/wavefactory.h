@@ -38,6 +38,8 @@ private slots:
 
     void on_dcdoubleSpinBox_valueChanged(double arg1);
 
+    void on_ampdoubleSpinBox_valueChanged(double arg1);
+
 private:
     Ui::WaveFactory *ui;
     QString error_message;

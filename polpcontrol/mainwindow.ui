@@ -30,6 +30,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::ActionsContextMenu</enum>
+       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
@@ -169,7 +172,7 @@
     <addaction name="separator"/>
     <addaction name="menuAdd_2"/>
     <addaction name="separator"/>
-    <addaction name="actionCopy_data"/>
+    <addaction name="actionClone"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -245,9 +248,25 @@
     <string>Save</string>
    </property>
   </action>
-  <action name="actionCopy_data">
+  <action name="actionClone">
    <property name="text">
-    <string>Copy data</string>
+    <string>Clone</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionRename">
+   <property name="text">
+    <string>Rename </string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
    </property>
   </action>
  </widget>

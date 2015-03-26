@@ -107,7 +107,8 @@ void WaveFactory::setDC(Data *data, double dc){
     }
     vi =bus->openDev(devId);
     bus->gpib_command(vi,":*CLS\n");
-    bus->gpib_command(vi,":VOLT "+QString::number(dc)+"\n");
+    bus->gpib_command(vi,":VOLT:LEV:IMM:OFFS "+QString::number(dc)+"\n");
+    qDebug(":VOLT:LEV:IMM:OFFS ");
     bus->closeDev(vi);
 }
 
@@ -128,4 +129,9 @@ void WaveFactory::on_sourceON_clicked()
 void WaveFactory::on_dcdoubleSpinBox_valueChanged(double arg1)
 {
     setDC(data,arg1);
+}
+
+void WaveFactory::on_ampdoubleSpinBox_valueChanged(double arg1)
+{
+
 }

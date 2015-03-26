@@ -26,6 +26,7 @@ Project *ProjectManager::newProject(){
     //TODO:: Add checking for need of saving
     // Save project
     if(_currentProject!=NULL){
+        disconnect(_currentProject,SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
         delete _currentProject;
     }
     _currentProject = new Project();
@@ -95,8 +96,14 @@ void ProjectManager::onProjectChanged(){
 
 
 int ProjectManager::loadFromFile(QString filename){
-    newProject();
-    //Save version 1
+    //newProject();
+    if(_currentProject!=NULL){
+        disconnect(_currentProject,SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
+        delete _currentProject;
+    }
+    _currentProject = new Project();
+    connect(_currentProject,SIGNAL(projectChanged()),this,SLOT(onProjectChanged()));
+    // Version 1 load
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)){
         errormessage = "File can not be opened";

@@ -51,6 +51,7 @@ class Project : public QObject
     friend class ProjectManager;
 public:
     explicit Project(QObject *parent = 0);
+    ~Project();
     QList<ProjectItem*> items();
     enum Status{
       Saved,
@@ -61,6 +62,7 @@ public:
     void addItem(Data* data, Device *dev);
     void addItem(Data* data, QString preferedview);
     void removeItem(ProjectItem* item);
+    void deleteItems(QList<ProjectItem*> datalist);
     void copyData(Data* data, QString title);
     Status status();
     QString getFilename();

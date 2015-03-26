@@ -6,10 +6,9 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-   # SMDFileFormat \
-    GPIBGeneralDevice \
-  # NMRAnalyser \
-  #  TripletDNP \
-  # ISEFileFormat \
-    CSVFileFormat
-
+    #SMDFileFormat \
+    #GPIBGeneralDevice \
+    #NMRAnalyser \
+    #TripletDNP \
+    #ISEFileFormat \
+    #CSVFileFormat

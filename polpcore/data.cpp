@@ -3,6 +3,9 @@
 Data::Data(QObject *parent) :QObject(parent){
 }
 
+Data::~Data(){
+}
+
 QVariant Data::parameter(QString key){
     return parameters.value(key);
 }
@@ -18,6 +21,12 @@ QList<QString> Data::parameterList(){
 
 
 Data2D::Data2D(QObject *parent) :Data(parent){
+}
+
+Data2D::~Data2D(){
+;
+    xdata.clear();
+    ydata.clear();
 }
 
 void Data2D::addPoint(QString curve, double x, double y){

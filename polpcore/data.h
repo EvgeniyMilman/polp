@@ -18,6 +18,7 @@ class Data : public QObject{
     Q_OBJECT
 public:
     explicit Data(QObject *parent = 0);
+    ~Data();
     virtual void startEdit() =0;
     virtual void stopEdit() =0;
     QVariant parameter(QString key);
@@ -36,6 +37,7 @@ class Data2D: public Data{
     Q_OBJECT
 public:
     explicit Data2D(QObject *parent = 0);
+    ~Data2D();
     void addPoint(QString curve, double x, double y);
     QVector<double> *x(QString curve);
     QVector<double> *y(QString curve);
